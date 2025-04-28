@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import "../pages/feedback.css";
 import emailjs from '@emailjs/browser';
