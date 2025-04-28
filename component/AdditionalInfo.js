@@ -6,6 +6,10 @@ import 'react-quill/dist/quill.snow.css';
 import "../pages/feedback.css";
 import emailjs from '@emailjs/browser';
 import axios from 'axios';
+import dynamic from 'next/dynamic';
+
+// Dynamically import ReactQuill with SSR disabled
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AditionalInfo = ({ id, data = { sections: [] }, fetchData })     => {
   const [section, setSection] = useState({
