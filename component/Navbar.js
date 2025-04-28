@@ -51,12 +51,7 @@ const Navbar = (props) => {
                                 <li><Link href="/admin/event/userlist">Users Listing</Link></li>
                             </ul>
                         </li>
-                        <li>
-                            <Link href="/admin/add-users/">
-                                <span className="icons"><RiListSettingsLine /></span>
-                                <span className="linklabel">Send Link</span>
-                            </Link>
-                        </li>
+                     
                         {/* Upload Excel */}
                         <li>
                             <Link href="/admin/event/upload">
