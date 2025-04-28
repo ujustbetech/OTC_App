@@ -254,21 +254,25 @@ const sendThankYouMessage = async (name, phone) => {
     console.error(`❌ Failed to send message to ${name}`, error.response?.data || error.message);
   }
 }; 
-useEffect(() => {
-    const fetchUsers = async () => {
-        try {
-            const response = await fetch('/userdetail.json');
-            const data = await response.json();
-            console.log("Fetched data:", data); // ✅ Add this line
+ useEffect(() => {
+        const fetchUsers = async () => {
+          try {
+            const userRef = collection(db, 'userdetails');
+            const snapshot = await getDocs(userRef);
+            const data = snapshot.docs.map(doc => ({
+              id: doc.id,
+              name: doc.data()[" Name"],
+              phone: doc.data()["Mobile no"],
+              Email: doc.data()["Email"]
+            }));
             setUserList(data);
-        } catch (error) {
+          } catch (error) {
             console.error('Error fetching users:', error);
-        }
-    };
+          }
+        };
     
-
-    fetchUsers();
-}, []);
+        fetchUsers();
+      }, []);
 
 const handleSearchUser = (e) => {
     const value = e.target.value.toLowerCase();
@@ -429,7 +433,7 @@ const handleMeetingDone = async () => {
     </div>
   </li>
 )}
-      <ul>
+      {/* <ul>
                     <li className='form-row'>
                     <h4>Select NT Member:<sup>*</sup></h4>
                     <div className='multipleitem'>
@@ -462,7 +466,7 @@ const handleMeetingDone = async () => {
                         <p>{NTphone}</p>
                     </div>
                 </li>
-                </ul>
+                </ul> */}
            
             {!rescheduleMode && (
               <>

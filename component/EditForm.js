@@ -40,21 +40,26 @@ const Edit = ({ id, data }) => {
     
   
   
+  
     useEffect(() => {
         const fetchUsers = async () => {
-            try {
-                const response = await fetch('/userdetail.json');
-                const data = await response.json();
-                console.log("Fetched data:", data); 
-                setUserList(data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
+          try {
+            const userRef = collection(db, 'userdetails');
+            const snapshot = await getDocs(userRef);
+            const data = snapshot.docs.map(doc => ({
+              id: doc.id,
+              name: doc.data()[" Name"],
+              phone: doc.data()["Mobile no"],
+              Email: doc.data()["Email"]
+            }));
+            setUserList(data);
+          } catch (error) {
+            console.error('Error fetching users:', error);
+          }
         };
-        
-
+    
         fetchUsers();
-    }, []);
+      }, []);
 
     const handleSearchUser = (e) => {
         const value = e.target.value.toLowerCase();

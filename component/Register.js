@@ -41,25 +41,43 @@ const Register = (props) => {
       };
       
     
-
+      useEffect(() => {
+        const fetchUsers = async () => {
+          try {
+            const userRef = collection(db, 'userdetails');
+            const snapshot = await getDocs(userRef);
+            const data = snapshot.docs.map(doc => ({
+              id: doc.id,
+              name: doc.data()[" Name"],
+              phone: doc.data()["Mobile no"],
+              Email: doc.data()["Email"]
+            }));
+            setUserList(data);
+          } catch (error) {
+            console.error('Error fetching users:', error);
+          }
+        };
+    
+        fetchUsers();
+      }, []);
     
   
   
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('/userdetail.json');
-                const data = await response.json();
-                console.log("Fetched data:", data); 
-                setUserList(data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchUsers = async () => {
+    //         try {
+    //             const response = await fetch('/userdetail.json');
+    //             const data = await response.json();
+    //             console.log("Fetched data:", data); 
+    //             setUserList(data);
+    //         } catch (error) {
+    //             console.error('Error fetching users:', error);
+    //         }
+    //     };
         
 
-        fetchUsers();
-    }, []);
+    //     fetchUsers();
+    // }, []);
 
     const handleSearchUser = (e) => {
         const value = e.target.value.toLowerCase();
@@ -206,7 +224,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
       const docId = docRef.id;
   
       if (userType === 'prospect') {
-        const formLink = `/prospectform/${docId}`;
+        const formLink = `https://otc-app.vercel.app/prospectform/${docId}`;
         console.log("Send this to Orbiter: ", formLink);
   
         // Send assessment email
@@ -259,7 +277,48 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
           {userType === 'orbiter' && (
             <>
           
-             
+          <li className='form-row'>
+                <h4>Select Orbiter:<sup>*</sup></h4>
+                <div className='multipleitem'>
+                  <input
+                    type="text"
+                    placeholder="Search Orbiter"
+                    value={userSearch}
+                    onChange={handleSearchUser}
+                  />
+                  {filteredUsers.length > 0 && (
+                    <ul className="dropdown">
+                      {filteredUsers.map(user => (
+                        <li key={user.id} onClick={() => handleSelectUser(user)}>
+                          {user.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </li>
+  
+              <li className='form-row'>
+                <h4>Selected Orbiter Name:<sup>*</sup></h4>
+                <div className='multipleitem'>
+                  <p>{name}</p>
+                </div>
+              </li>
+  
+              <li className='form-row'>
+                <h4>Selected Orbiter's Phone:<sup>*</sup></h4>
+                <div className='multipleitem'>
+                  <p>{phone}</p>
+                </div>
+              </li>
+  
+              <li className='form-row'>
+                <h4>Selected Orbiter Email:<sup>*</sup></h4>
+                <div className='multipleitem'>
+                  <p>{orbiteremail}</p>
+                </div>
+              </li>
+  
               <li className='form-row'>
                 <h4>Prospect Name:<sup>*</sup></h4>
                 <div className='multipleitem'>
