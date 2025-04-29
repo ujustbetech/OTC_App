@@ -279,7 +279,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
           
           <li className='form-row'>
                 <h4>Select Orbiter:<sup>*</sup></h4>
-                <div className='multipleitem'>
+                <div className='autosuggest'>
                   <input
                     type="text"
                     placeholder="Search Orbiter"
@@ -543,11 +543,11 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
             </>
           )}
   
-          <li className='form-row'>
-            <div className='multipleitem'>
+
+            <div className='button-group'>
               <button className='submitbtn' onClick={handleSubmit}>Register</button>
             </div>
-          </li>
+       
         </ul>
       </div>
     </section>

@@ -353,8 +353,8 @@ const handleMeetingDone = async () => {
 
 
   return (
-    <section className='c-form box'>
-      <h2>Follow-up Details</h2>
+    <div>
+      <h2>Meeting Schedule Logs</h2>
 
       {/* Event Section */}
  
@@ -384,8 +384,8 @@ const handleMeetingDone = async () => {
   )}
    <ul>
       <li className='form-row'>
-      <div className='multipleitem'>
-    <button className='submitbtn' onClick={() => {
+      <div className='twobtns'>
+    <button className='m-button-7' onClick={() => {
               setEventDate(eventCreated.date);
               setEventMode(eventCreated.mode);
               setZoomLink(eventCreated.zoomLink || '');
@@ -394,7 +394,7 @@ const handleMeetingDone = async () => {
             }}>
               Reschedule
             </button>
-            <button className='m-button-7' onClick={handleMeetingDone}>
+            <button className='submitbtn' onClick={handleMeetingDone}>
     Done
   </button>
             </div>
@@ -528,40 +528,41 @@ const handleMeetingDone = async () => {
    
 
       {/* Comments Section */}
-      <div className='sticky-comments'>
+     
+  <div >
   <h3>Comments</h3>
 
   {comments.length === 0 ? (
     <p>No comments yet.</p>
   ) : (
-    <div className='comment-list'>
+    <div className="comment-list">
       {comments.map((c, idx) => (
-        <div key={idx} className='comment-bubble'>
-          <span className='timestamp'>{new Date(c.timestamp).toLocaleString()}</span>
+        <div key={idx} className="comment-bubble">
+          <span className="chat-timestamp">{new Date(c.timestamp).toLocaleString()}</span>
           <p>{c.text}</p>
         </div>
       ))}
     </div>
   )}
 
-  <div className='form-row'>
+  <div className="chat-input-area">
     <textarea
       value={comment}
       onChange={(e) => setComment(e.target.value)}
-      placeholder='Write your message...'
-      rows={3}
+      placeholder="Write your message..."
+      rows={2}
+      className="chat-textarea"
     />
-    <ul>
-      <li className='form-row'>
-      <div className='multipleitem'>
-    <button onClick={handleSendComment} className='submitbtn'>Send</button>
+       <div className='multipleitem'>
+    <button onClick={handleSendComment} className='m-button-9'>Send</button>
     </div>
-    </li>
-    </ul>
   </div>
 </div>
 
-    </section>
+
+
+</div>
+
   );
 };
 

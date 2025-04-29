@@ -115,7 +115,7 @@ const [userSearch, setUserSearch] = useState('');
 
   return (
 <div>
-    <h2 className="form-title">Engagement Discussion</h2>
+    <h2 className="form-title">Engagement Logs</h2>
   
  
 <ul>
@@ -175,9 +175,9 @@ const [userSearch, setUserSearch] = useState('');
         />
         </div>
       </li>
-  </ul>
-  <ul className="form-fields">
-      <li className="form-item">
+
+
+  <li className='form-row'>
         <label className="form-label">Discussion Details</label>
         <textarea
           name="discussionDetails"
@@ -187,7 +187,8 @@ const [userSearch, setUserSearch] = useState('');
           required
         />
       </li>
-  
+      </ul>
+      <ul className="form-fields">
       {/* Orbiter Suggestions */}
       <li className="form-item">
         <label className="form-label">Suggestions Shared by Orbiter</label>
@@ -201,7 +202,7 @@ const [userSearch, setUserSearch] = useState('');
             placeholder={`Suggestion ${index + 1}`}
           />
         ))}
-        <button type="button" className="add-field-btn" onClick={() => addMoreField('orbiterSuggestions')}>+ Add Suggestion</button>
+        <button type="button" className="m-button-7" onClick={() => addMoreField('orbiterSuggestions')}>+ Add Suggestion</button>
       </li>
   
       {/* Team Suggestions */}
@@ -217,7 +218,7 @@ const [userSearch, setUserSearch] = useState('');
             placeholder={`Team Suggestion ${index + 1}`}
           />
         ))}
-        <button type="button" className="add-field-btn" onClick={() => addMoreField('teamSuggestions')}>+ Add Suggestion</button>
+        <button type="button" className="m-button-7" onClick={() => addMoreField('teamSuggestions')}>+ Add Suggestion</button>
       </li>
   
       {/* Referral Possibilities */}
@@ -233,7 +234,7 @@ const [userSearch, setUserSearch] = useState('');
             placeholder={`Referral Possibility ${index + 1}`}
           />
         ))}
-        <button type="button" className="add-field-btn" onClick={() => addMoreField('referralPossibilities')}>+ Add Referral</button>
+        <button type="button" className="m-button-7" onClick={() => addMoreField('referralPossibilities')}>+ Add Referral</button>
       </li>
     </ul>
   

@@ -4,6 +4,7 @@ import { db } from '../firebaseConfig';
 import emailjs from '@emailjs/browser';
 import "../src/app/styles/main.scss";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Assessment = ({ id, fetchData }) => {
   const [loading, setLoading] = useState(false);
@@ -187,29 +188,61 @@ const handleSaveStatus = async (selectedstatus) => {
 };
 
 
+const confirmSaveStatus = (newStatus) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `You want to set status as "${newStatus}"?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, confirm it!',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      handleSaveStatus(newStatus);
+    }
+  });
+};
 
-  return (
+return (
+  <div>
+    <h2 className="form-title">Authentic Choice by Prospect</h2>
+    <h3>Status: {status || 'No status yet'}</h3>
     <div className="status-container">
-  <h3>Status: {status || 'No status yet'}</h3>
-  <p>Date: {currentDate}</p>
-  <div className="twobtns">
-    <button className="m-button-9" onClick={() => handleSaveStatus('Choose to enroll')} disabled={loading}>
-      Choose to enroll
-    </button>
-    <button className="m-button-9" onClick={() => handleSaveStatus('Declined')} disabled={loading}>
-      Decline
-    </button>
-    <button className="m-button-9" onClick={() => handleSaveStatus('Need some time')} disabled={loading}>
-      Need some time
-    </button>
-    <button className="m-button-9" onClick={() => handleSaveStatus('Awaiting response')} disabled={loading}>
-      Awaiting response
-    </button>
-  
+      <p>Date: {currentDate}</p>
+      <div className="twobtns">
+        <button
+          className="m-button-7"
+          onClick={() => confirmSaveStatus('Choose to enroll')}
+          disabled={loading}
+        >
+          Choose to enroll
+        </button>
+        <button
+          className="m-button-7"
+          onClick={() => confirmSaveStatus('Declined')}
+          disabled={loading}
+        >
+          Decline
+        </button>
+        <button
+          className="m-button-7"
+          onClick={() => confirmSaveStatus('Need some time')}
+          disabled={loading}
+        >
+          Need some time
+        </button>
+        <button
+          className="m-button-7"
+          onClick={() => confirmSaveStatus('Awaiting response')}
+          disabled={loading}
+        >
+          Awaiting response
+        </button>
+      </div>
+    </div>
   </div>
-</div>
-
-  );
+);
 };
 
 export default Assessment;

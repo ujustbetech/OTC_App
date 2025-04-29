@@ -3,9 +3,10 @@ import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import emailjs from '@emailjs/browser';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const dropdownOptions = {
-  'Enrollment': ['In Progress', 'Completed', 'Not Started'],
+  'Enrollment Initiation': ['In Progress', 'Completed', 'Not Started'],
   'Enrollment documents mail': ['Sent', 'Pending', 'Need Revision'],
   'Enrollment Fees Mail Status': ['Sent', 'Not Sent', 'Follow-up Required'],
   'Enrollment fees Option Opted for': ['Upfront', 'Adjustment', 'No Response Adjustment' , 'Confirmation recieved'],
@@ -364,9 +365,41 @@ We’ve shared an email with the details with the process. `;
     }
   };
   
+  const confirmAndSendEmail = (index) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to send the email?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, send it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSendEmail(index);
+      }
+    });
+  };
+
+  const confirmAndSave = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to save the changes?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, save it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSave();
+      }
+    });
+  };
+
   return (
     <div>
-      <h2>Enrollment Stages</h2>
+      <h2>Enrollment Status Updates</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ backgroundColor: '#f2f2f2' }}>
@@ -396,30 +429,38 @@ We’ve shared an email with the details with the process. `;
                 />
               </td>
               <td>
-               <select
-  value={row.status}
-  onChange={(e) => handleChange(index, 'status', e.target.value)}
->
-  <option value="">Select</option>
-  {(dropdownOptions[row.label] || []).map((opt) => (
-    <option key={opt} value={opt}>
-      {opt}
-    </option>
-  ))}
-</select>
-
+                <select
+                  value={row.status}
+                  onChange={(e) => handleChange(index, 'status', e.target.value)}
+                >
+                  <option value="">Select</option>
+                  {(dropdownOptions[row.label] || []).map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               </td>
               <td>
-                <button onClick={() => handleSendEmail(index)}>Send</button>
+                <button
+                  className="m-button-7"
+                  onClick={() => confirmAndSendEmail(index)}
+                >
+                  Send
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={handleSave} disabled={loading}>
-          {loading ? 'Saving...' : 'Save All'}
+      <div className='button-group'>
+        <button
+          className='save-button'
+          onClick={confirmAndSave}
+          disabled={loading}
+        >
+          {loading ? 'Saving...' : 'Save'}
         </button>
       </div>
     </div>

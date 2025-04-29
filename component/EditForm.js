@@ -143,13 +143,13 @@ const prospectDocRef = doc(db, 'Prospects', id);
       
     return (
       
-            <section className='c-form box'>
+           <div>
                 <div>
-                    <h2>Add New Prospects</h2>
+                    <h2>{prospectName}'s Details</h2>
                     <ul>
                     <li className='form-row'>
                     <h4>Select Orbiter:<sup>*</sup></h4>
-                    <div className='multipleitem'>
+                    <div className='autosuggest'>
                         <input
                             type="text"
                             placeholder="Search Orbiter"
@@ -284,7 +284,7 @@ const prospectDocRef = doc(db, 'Prospects', id);
                         </li>
                     </ul>   
                 </div>
-            </section>
+          </div>
     
     );
 };

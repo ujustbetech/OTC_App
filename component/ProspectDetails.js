@@ -27,9 +27,9 @@ const ProspectFormDetails = ({ id }) => {
   if (forms.length === 0) return <p>No prospect forms found.</p>;
 
   return (
-    <section className='c-form box'>
+   <div>
     <div >
-      <h2>Prospect Form Details</h2>
+      <h2>Prospects Assesment Form</h2>
       {forms.map((form, index) => (
         <div key={form.id} >
        
@@ -37,151 +37,169 @@ const ProspectFormDetails = ({ id }) => {
           <li className='form-row'>
                     <h4>Mentor Name:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.mentorName}</p>
+                      <input type="text" value={form.mentorName} disabled />
+          <p> </p>
           </div>
           </li>
        
           <li className='form-row'>
                     <h4>Mentor Phone:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.mentorPhone}</p>
+                    <input type="text" value={form.mentorPhone} disabled />
+
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Mentor Emaile:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.mentorEmail}</p>
+                    <input type="text" value={form.mentorEmail} disabled />
+  
           </div>
           </li>
           
           <li className='form-row'>
                     <h4>Assessment Date:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.assessmentDate}</p>
+                    <input type="text" value={form.assessmentDate} disabled />
+ 
           </div>
           </li>
          
           
-
-          <hr />
+         
        
           <li className='form-row'>
                     <h4>Prospect Name:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.fullName}</p>
+                    <input type="text" value={form.fullName} disabled />
+          
           </div>
           </li>
      
           <li className='form-row'>
                     <h4>Phone:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.phoneNumber}</p>
+                    <input type="text" value={form.phoneNumber} disabled />
+
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Email:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.email}</p>
+                    <input type="text" value={form.email} disabled />
+
           </div>
           </li>
          
           <li className='form-row'>
                     <h4>City & Country:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.cityCountry}</p>
+                    <input type="text" value={form.cityCountry} disabled />
+      
           </div>
           </li>
          
           <li className='form-row'>
                     <h4>Profession:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.profession}</p>
+                    <input type="text" value={form.profession} disabled />
+   
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Company:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.companyName}</p>
+                    <input type="text" value={form.companyName} disabled />
+ 
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Industry:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.industry}</p>
+                    <input type="text" value={form.industry} disabled />
+
           </div>
           </li>
        
           <li className='form-row'>
                     <h4>Social Profile:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.socialProfile}</p>
+                    <input type="text" value={form.socialProfile} disabled />
+ 
           </div>
           </li>
           
-       
-          <hr />
+      
          
           <li className='form-row'>
                     <h4>Found How:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.howFound}</p>
+                    <input type="text" value={form.howFound} disabled />
+        
           </div>
           </li>
        
           <li className='form-row'>
                     <h4>Interest Level:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.interestLevel}</p>
+                    <input type="text" value={form.interestLevel} disabled />
+        
           </div>
           </li>
           
           <li className='form-row'>
                     <h4>Interest Areas:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.interestAreas?.join(", ")}</p>
+                    <input type="text" value={form.interestAreas?.join(", ")} disabled />
+       
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Contribution Ways:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.contributionWays?.join(", ")}</p>
+                    <input type="text" value={form.contributionWays?.join(", ")} disabled />
+    
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Informed Status:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.informedStatus}</p>
+                    <input type="text" value={form.informedStatus} disabled />
+    
           </div>
           </li>
         
         
 
-          <hr />
+        
          
           <li className='form-row'>
                     <h4>Alignment Level:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.alignmentLevel}</p>
+                    <input type="text" value={form.alignmentLevel} disabled />
+   
           </div>
           </li>
         
           <li className='form-row'>
                     <h4>Recommendation:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.recommendation}</p>
+                    <input type="text" value={form.recommendation} disabled />
+       
           </div>
           </li>
        
           <li className='form-row'>
                     <h4>Comments:<sup>*</sup></h4>
                     <div className='multipleitem'>
-          <p> {form.additionalComments}</p>
+                    <input type="text" value={form.additionalComments} disabled />
+      
           </div>
           </li>
           </ul>
@@ -189,7 +207,7 @@ const ProspectFormDetails = ({ id }) => {
         </div>
       ))}
     </div>
-    </section>
+    </div>
   );
 };
 

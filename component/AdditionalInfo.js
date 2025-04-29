@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+
 import 'react-quill/dist/quill.snow.css';
 import "../pages/feedback.css";
 import emailjs from '@emailjs/browser';
@@ -9,6 +10,8 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+
 
 const AditionalInfo = ({ id, data = { sections: [] }, fetchData })     => {
   const [section, setSection] = useState({
@@ -163,9 +166,9 @@ Your input is valuable, and we look forward to continuing this journey with you.
   return (
 <div>
   <div className="prospect-container">
-    <h2 className="form-title">Prospect Details</h2>
+    <h2 className="form-title">UJB Pre Enrollment Assesment Form</h2>
     <ul className="prospect-list">
-      <li className="prospect-item">
+    <li className='form-row'>
         <h4 className="prospect-label">As lived Experience:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -176,8 +179,9 @@ Your input is valuable, and we look forward to continuing this journey with you.
           />
         </div>
       </li>
+   
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Overview of UJustBe:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -188,7 +192,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Why UJustBe for Them:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -199,7 +203,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Selection Rationale:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -210,7 +214,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Tangible Aspects:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -222,7 +226,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Intangible Aspects:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -234,7 +238,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Vision Statement:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
@@ -246,7 +250,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
         </div>
       </li>
 
-      <li className="prospect-item">
+      <li className='form-row'>
         <h4 className="prospect-label">Happy Face:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
