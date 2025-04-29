@@ -444,14 +444,16 @@
   }
   
   .save-button {
-    background-color:#f16f06;
+    background-color: #eb8130;
     color: #fff;
-    font-size: 1rem;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    border: 1px solid #d1a481;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 120px;
+    margin-right: 30px;
   }
   
   .save-button:hover {
