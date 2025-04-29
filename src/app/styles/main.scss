@@ -936,7 +936,7 @@ $italianfont:'Italianno', ;
           font-weight: 400;
           font-size: 18px;
           padding: 10px;
-          border-radius: 5px;
+          border-radius: 20px;
           width: 100%;
           max-width: 120px;
           margin-right: 30px;
@@ -2048,12 +2048,12 @@ display: none; /* For IE */
   font-size: 14px;
 }
 .status-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 16px;
-  background: #f9f9ff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  // background: #f9f9ff;
+  // box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -2076,14 +2076,16 @@ display: none; /* For IE */
 }
 
 .m-button-9 {
-  background-color: #f16f06;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
+  background-color: #eb8130;
+  color: #fff;
+  border: 1px solid #d1a481;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 120px;
+  margin-right: 30px;
 }
 
 .m-button-9:hover {
@@ -2231,7 +2233,7 @@ select {
 }
 
 .add-field-btn {
-  background-color: #f16f06;
+  background-color: #16274f;
   color: #fff;
   font-size: 1rem;
   padding: 8px 20px;
@@ -2247,15 +2249,16 @@ select {
 }
 
 .save-button {
-  background-color: #f16f06;
-  color: #fff;
-  font-size: 1.2rem;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
+  background-color: #eb8130;
+    color: #fff;
+    border: 1px solid #d1a481;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 120px;
+    margin-right: 30px;
 }
 
 .save-button:hover {
