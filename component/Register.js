@@ -92,7 +92,7 @@ const Register = (props) => {
     const handleSelectUser = (user) => {
       if (userType === 'orbiter') {
         // Populate dummy MentOrbiter data
-        setName("UJustBe Support");
+        setName("UJustBeSupport");
         setPhone("8928660399");
         setOrbiterEmail("support@ujustbe.com");
     
@@ -189,7 +189,13 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
     }
   };
          
-    
+  useEffect(() => {
+    if (userType !== 'orbiter') {
+      setName(props?.data?.orbiterName || '');
+      setPhone(props?.data?.orbiterContact || '');
+      setOrbiterEmail(props?.data?.orbiterEmail || '');
+    }
+  }, [props.data, userType]);
    
 
   const handleSubmit = async (e) => {
@@ -217,6 +223,9 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
         occupation,
         hobbies,
         email,
+        orbiterName: name,
+        orbiterContact: phone,
+        orbiterEmail: orbiteremail,
         date: formattedDate,
         registeredAt: new Date()
       };
@@ -570,12 +579,15 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
               </li>
             </>
           )}
-  
+    <ul>
+                        <li className='form-row'>
+                            <div className='multipleitem'>
+                                <button className='submitbtn' onClick={handleSubmit}>Register</button>
+                            </div>
+                        </li>
+                    </ul>  
 
-            <div className='button-group'>
-              <button className='submitbtn' onClick={handleSubmit}>Register</button>
-            </div>
-       
+          
         </ul>
     
       </div>

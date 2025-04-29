@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs ,doc, deleteDoc} from 'firebase/firestore';
+
 import { format } from 'date-fns';
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from 'next/router';
@@ -44,7 +45,20 @@ const ManageEvents = () => {
         }
         return 'N/A';  // Return 'N/A' if there's no valid timestamp
     };
-
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this prospect?");
+        if (!confirmDelete) return;
+    
+        try {
+            await deleteDoc(doc(db, "Prospects", id));
+            setProspects(prev => prev.filter(p => p.id !== id));
+            alert("Prospect deleted successfully.");
+        } catch (error) {
+            console.error("Error deleting prospect:", error);
+            alert("Failed to delete prospect. Please try again.");
+        }
+    };
+    
     return (
         <>
             {loading && <div className='loader'><span className="loader2"></span></div>}
@@ -59,11 +73,11 @@ const ManageEvents = () => {
                         <tr>
                             <th>Sr no</th>
                             <th>Prospect Name</th>
-                            <th>Prospect Contact</th>
+                        
                             <th>Occupation</th>
                             <th>Orbiter Name</th>
-                            <th>Orbiter Contact</th>
-                            <th>Type</th>
+                           
+                          
                             <th>Date</th>
                             <th>Registered At</th>
                             <th>Actions</th>
@@ -75,22 +89,30 @@ const ManageEvents = () => {
                                 <tr key={item.id}>
                                     <td>{index + 1}</td>
                                     <td>{item.prospectName}</td>
-                                    <td>{item.prospectPhone}</td>
+                                 
                                     <td>{item.occupation}</td>
                                     <td>{item.orbiterName}</td>
-                                    <td>{item.orbiterContact}</td>
-                                    <td>{item.type}</td>
+                                
+                                  
                                     <td>{item.date}</td>
                                     <td>{formatDate(item.registeredAt)}</td>
-                                    <td>
-                                        <button
-                                            className="m-button-7"
-                                            onClick={() => handleEdit(item.id)}
-                                            style={{ backgroundColor: '#f16f06', color: 'white' }}
-                                        >
-                                            <CiEdit /> Edit
-                                        </button>
-                                    </td>
+                                   <td>
+         <div className='twobtn'>                  
+    <button
+        className="btn-edit"
+        onClick={() => handleEdit(item.id)}
+    >
+       ✎ Edit
+    </button>
+    <button
+        className="btn-delete"
+        onClick={() => handleDelete(item.id)}
+    >
+        🗑 Delete
+    </button>
+    </div>    
+</td>
+
                                 </tr>
                             ))
                         ) : (
