@@ -61,6 +61,7 @@ body {
 
   h2 {
     font-size: 18px;
+    text-align: justify;
     font-weight: 600;
     margin-bottom: 30px;
   }
@@ -131,6 +132,65 @@ body {
     }
   }
 }
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full screen height */
+  max-height: 100vh;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.chat-bubble {
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+
+.chat-timestamp {
+  display: block;
+  font-size: 0.7rem;
+  color: gray;
+  margin-bottom: 4px;
+}
+
+.chat-input-area {
+  display: flex;
+  padding: 10px;
+  // border-top: 1px solid #ccc;
+  background: white;
+}
+
+.chat-textarea {
+  flex: 1;
+  resize: none;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-right: 8px;
+}
+
+.chat-send-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chat-send-button:hover {
+  background-color: #0056b3;
+}
+
 .sticky-comments {
   max-width: 600px;
   margin: auto;
@@ -139,6 +199,7 @@ body {
 
 .comment-list {
   display: flex;
+  padding: 10px;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
@@ -274,7 +335,7 @@ textarea {
   }
 
   textarea {
-    width: 100%;
+    width: 78%;
     padding: 10px;
     line-height: 20px;
     border: 1px solid $bordercolor;
