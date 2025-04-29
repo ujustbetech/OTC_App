@@ -13,6 +13,7 @@ import Assesment from '../../../../component/Assesment';
 import EnrollmentStage from '../../../../component/EnrollmentStage';
 import ProspectFormDetails from '../../../../component/ProspectDetails';
 import EngagementForm from '../../../../component/Engagementform';
+import ProspectFeedback from '../../../../component/ProspectFeedback';
 
 
 
@@ -30,7 +31,7 @@ const EditAdminEvent = () => {
 
 
   const tabs = [
-    'Prospect Details', 'Assesment Form', 'Meeting Logs', 'Pre- Enrollment Form' ,'Authentic Choice','Enrollment Status','Engagement Logs'];
+    'Prospect Details', 'Assesment Form', 'Meeting Logs', 'Pre- Enrollment Form' ,'Feedback Form','Authentic Choice','Enrollment Status','Engagement Logs'];
 
   const fetchEvent = async (index) => {
     try {
@@ -76,7 +77,18 @@ const EditAdminEvent = () => {
    const handleTabClick = (index) => {
     setActiveTab(index);
   };
-  
+    
+  const goToNextTab = () => {
+    if (activeTab < tabs.length - 1) {
+      setActiveTab(activeTab + 1);
+    }
+  };
+
+  const goToPreviousTab = () => {
+    if (activeTab > 0) {
+      setActiveTab(activeTab - 1);
+    }
+  };
   return (
     <Layout>
        <div className="step-form-container">
@@ -116,17 +128,32 @@ const EditAdminEvent = () => {
           <AditionalInfo data={eventData} id={id} />
         </>}
         {activeTab === 4 && <>
-          <Assesment data={eventData} id={id} />
+          <ProspectFeedback data={eventData} id={id} />
         </>}
         {activeTab === 5 && <>
-          <EnrollmentStage data={eventData} id={id} />
+          <Assesment data={eventData} id={id} />
         </>}
         {activeTab === 6 && <>
+          <EnrollmentStage data={eventData} id={id} />
+        </>}
+        {activeTab === 7 && <>
           <EngagementForm data={eventData} id={id} />
         </>}
    </>
 )}
+    <div className="nav-buttons">
+  <button type="button" onClick={goToPreviousTab} disabled={activeTab === 0}>
+    Back
+  </button>
 
+  {activeTab === tabs.length - 1 ? (
+  null
+  ) : (
+    <button type="button" onClick={goToNextTab}>
+      Next
+    </button>
+  )}
+</div>
        
      
       </section>
