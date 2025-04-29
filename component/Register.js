@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import "../src/app/styles/main.scss";
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
+import Swal from 'sweetalert2';
 
 const Register = (props) => {
     console.log("BasicInfoSection",props);
@@ -89,12 +90,27 @@ const Register = (props) => {
     };
 
     const handleSelectUser = (user) => {
+      if (userType === 'orbiter') {
+        // Populate dummy MentOrbiter data
+        setName("UJustBe Support");
+        setPhone("8928660399");
+        setOrbiterEmail("support@ujustbe.com");
+    
+        // Use selected user's info as prospect details
+        setProspectName(user.name);
+        setProspectPhone(user.phone);
+        setEmail(user.Email);
+      } else {
+        // Default behavior: set selected user as MentOrbiter
         setName(user.name);
         setPhone(user.phone);
-        setOrbiterEmail(user.Email);
-        setUserSearch('');
-        setFilteredUsers([]);
+        setOrbiterEmail(user.email);
+      }
+    
+      setUserSearch('');
+      setFilteredUsers([]);
     };
+    
     
 
     // Handle Dropdown Change for Type
@@ -137,7 +153,7 @@ const Register = (props) => {
       };
 // Function to send thank you message
 // Function to send the assessment message
-const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
+const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) => {
     const payload = {
       messaging_product: 'whatsapp',
       to: `91${phone}`, // Prefix the phone number with the country code
@@ -150,7 +166,9 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
             type: 'body',
             parameters: [
                 { type: 'text', text: orbiterName },
-                { type: 'text', text: prospectName }
+                { type: 'text', text: prospectName },
+                { type: 'text', text: formLink }
+
               ]
           }
         ]
@@ -231,12 +249,23 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
         await sendAssessmentEmail(name, orbiteremail, prospectName, formattedDate, formLink);
   
         // Optional WhatsApp message (uncomment if needed)
-        await sendAssesmentMessage(name, prospectName, phone);
+        await sendAssesmentMessage(name, prospectName, phone,formLink);
   
-        alert(`Prospect registered successfully! Share this link:\n${formLink}`);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Prospect registered successfully!',
+        });
+        
       } else {
-        alert(`Orbiter registered successfully!`);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Orbiter registered successfully!',
+        });
+        
       }
+    
   
       // Clear form fields
       setUserType('');
@@ -255,8 +284,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
       alert('Error registering user');
     }
   };
-  
-  
+
 
       
   return (
@@ -278,7 +306,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
             <>
           
           <li className='form-row'>
-                <h4>Select Orbiter:<sup>*</sup></h4>
+                <h4>Select MentOrbiter:<sup>*</sup></h4>
                 <div className='autosuggest'>
                   <input
                     type="text"
@@ -299,21 +327,21 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter Name:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter Name:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{name}</p>
                 </div>
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter's Phone:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter's Phone:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{phone}</p>
                 </div>
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter Email:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter Email:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{orbiteremail}</p>
                 </div>
@@ -408,11 +436,11 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
               </li>
             </>
           )}
-  
+ 
           {userType === 'prospect' && (
             <>
               <li className='form-row'>
-                <h4>Select Orbiter:<sup>*</sup></h4>
+                <h4>Select MentOrbiter:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <input
                     type="text"
@@ -433,21 +461,21 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter Name:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter Name:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{name}</p>
                 </div>
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter's Phone:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter's Phone:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{phone}</p>
                 </div>
               </li>
   
               <li className='form-row'>
-                <h4>Selected Orbiter Email:<sup>*</sup></h4>
+                <h4>Selected MentOrbiter Email:<sup>*</sup></h4>
                 <div className='multipleitem'>
                   <p>{orbiteremail}</p>
                 </div>
@@ -549,7 +577,9 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone) => {
             </div>
        
         </ul>
+    
       </div>
+
     </section>
   );
   

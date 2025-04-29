@@ -8,8 +8,8 @@ import Swal from 'sweetalert2';
 const dropdownOptions = {
   'Enrollment Initiation': ['In Progress', 'Completed', 'Not Started'],
   'Enrollment documents mail': ['Sent', 'Pending', 'Need Revision'],
-  'Enrollment Fees Mail Status': ['Sent', 'Not Sent', 'Follow-up Required'],
-  'Enrollment fees Option Opted for': ['Upfront', 'Adjustment', 'No Response Adjustment' , 'Confirmation recieved'],
+  'Enrollment Fees Mail Status': ['Sent', 'Follow-up Required'],
+  'Enrollment fees Option Opted for': ['Upfront', 'Adjustment', 'No Response Adjustment' , 'Upfront Enrollment fees Confirmation'],
   'Enrollments Completion Status': ['Completed', 'Pending', 'Withdrawn']
 };
 const WHATSAPP_API_URL = 'https://graph.facebook.com/v22.0/527476310441806/messages';
@@ -140,7 +140,9 @@ switch (label) {
     break;
 
   case 'Enrollment documents mail':
-    body = `Hello ${prospectName},\n\nIt was a pleasure connecting with you. Following our discussion, we are delighted to invite you to join UJustBe as an Orbiter.
+    switch (status) {
+      case 'Sent':
+        body = `Hello ${prospectName},\n\nIt was a pleasure connecting with you. Following our discussion, we are delighted to invite you to join UJustBe as an Orbiter.
 
 As we discussed, we would like this enrollment to be an authentic choice you make to become a part of the UJustBe Universe.  
 
@@ -152,33 +154,71 @@ To proceed, we kindly request you to reply to this email with your approval alon
 4) Cancelled Cheque Copy (For KYC purposes and to facilitate transfer of UJustBe referral rewards)
 
 Upon receiving the required documents, the UJustBe team will guide you through the next steps of the process.`;
+        break;
+      case 'Pending':
+        body = `Hi ${prospectName},\n\nYou are just one step away from fully stepping into the UJustBe Universe and unlocking a world of possibilities, collaborations, and meaningful connections!
+ 
+We noticed your enrollment documents are yet to be completed. To move forward and activate your journey, we invite you to connect with your MentOrbiter or speak with our UJustBe Support Team—they're here to walk with you and support you every step of the way.
+We are excited to witness the contribution and value you’ll bring to the community. Let’s get you fully onboarded! 
+
+ .`;
+        break;
+      case 'Need Revision':
+        body = `Hi ${prospectName},\n\nYou are just one step away from completing your enrolment in UJustBe Universe and exploring a space filled with possibilities, collaboration, and contribution!
+ 
+We have noticed that your enrollment documents require a few revisions. To move forward and complete your onboarding, we invite you to connect with your MentOrbiter or the UJustBe Support Team. They are here to guide you and ensure you have everything you need to take this next step confidently.
+ 
+We are excited for the unique value you’ll bring into the community. Let’s get your journey officially started! `;
+        break;
+   
+      default:
+        body = `Hi ${prospectName},\n\nYou've opted for ${status} as your payment method. If any change is needed, please let us know.`;
+    }
+   
     break;
 
   case 'Enrollment Fees Mail Status':
-    body = `Hi ${prospectName},\n\nThank you for making an authentic choice in becoming an Orbiter in the UJustBe Universe.
+    switch (status) {
+      case 'Sent':
+        body = `Hi ${prospectName},\n\nThank you for making an authentic choice in becoming an Orbiter in the UJustBe Universe.
 
-Below are the details regarding the one-time Orbiter Enrollment Fee:
-
-Orbiter Enrollment Fee
-Amount: Rs. 1,000 (Lifetime)
-
-You are invited to choose one of the following payment methods:
-
-Direct Payment to UJustBe's Account:
-You can directly transfer the enrollment fee to UJustBe’s account. Once your referral is closed, the reciprocation amount will be credited directly to your account registered with UJustBe.
-
-Adjustment from Referral Reciprocation:
-The enrollment fee will be adjusted against your referral reciprocation. Once the adjustment is completed, subsequent referral reciprocation fees will be transferred to your account.
-
-Next Steps:
-Please confirm your choice by replying to this email with one of the options below:
-
-Option 1: I would like to pay the Orbiter Registration Fee of Rs. 1000/- directly to UJustBe.
-Option 2: Kindly adjust the Orbiter Registration Fee from the referral reciprocation.
-
-Once we receive your confirmation, we will send you an invoice and guide you through the next steps to complete the process.
-
-If you have any questions or need further assistance, please feel free to reach out. We look forward to your confirmation.`;
+        Below are the details regarding the one-time Orbiter Enrollment Fee:
+        
+        Orbiter Enrollment Fee
+        Amount: Rs. 1,000 (Lifetime)
+        
+        You are invited to choose one of the following payment methods:
+        
+        Direct Payment to UJustBe's Account:
+        You can directly transfer the enrollment fee to UJustBe’s account. Once your referral is closed, the reciprocation amount will be credited directly to your account registered with UJustBe.
+        
+        Adjustment from Referral Reciprocation:
+        The enrollment fee will be adjusted against your referral reciprocation. Once the adjustment is completed, subsequent referral reciprocation fees will be transferred to your account.
+        
+        Next Steps:
+        Please confirm your choice by replying to this email with one of the options below:
+        
+        Option 1: I would like to pay the Orbiter Registration Fee of Rs. 1000/- directly to UJustBe.
+        Option 2: Kindly adjust the Orbiter Registration Fee from the referral reciprocation.
+        
+        Once we receive your confirmation, we will send you an invoice and guide you through the next steps to complete the process.
+        
+        If you have any questions or need further assistance, please feel free to reach out. We look forward to your confirmation.`;
+        break;
+   
+      case 'Follow-up Required':
+        body = `Hi ${prospectName},\n\nJust following up to check in on your decision regarding the enrollment fees for joining the UJustBe Universe. This step will help activate your onboarding and open the door to powerful connections, collaborations, and opportunities aligned with your growth journey.
+If you have any questions or need clarity, please feel free to speak with your MentOrbiter or connect with our UJustBe Support Team. 
+ 
+We are here to support you in making an empowered decision.
+ 
+Looking forward to welcoming you fully into the Universe! `;
+        break;
+   
+  
+    }
+  
+   
     break;
 
   case 'Enrollment fees Option Opted for':
@@ -239,26 +279,48 @@ Should you have any questions or need assistance, please feel free to reach out 
     break;
 
   case 'Enrollments Completion Status':
-    body = `Dear ${prospectName},\n\nWelcome to the UJustBe Universe!
+    switch (status) {
+      case 'Completed':
+        body = `Dear ${prospectName},\n\nWelcome to the UJustBe Universe!
 
-Thank you for making the authentic choice to become an Orbiter in this thriving community. We are delighted to have you join us on this exciting journey. Below is an overview of your journey path within the UJustBe Universe:
+        Thank you for making the authentic choice to become an Orbiter in this thriving community. We are delighted to have you join us on this exciting journey. Below is an overview of your journey path within the UJustBe Universe:
+        
+        - Orbiter – Your initiation into the UJustBe Universe, where meaningful relationships begin to form, holistic health is nurtured, and the foundation of wealth is laid through connections and growth.
 
-- **Orbiter** – Your initiation into the UJustBe Universe, where meaningful relationships begin to form, holistic health is nurtured, and the foundation of wealth is laid through connections and growth.
-- **Monthly Meeting Journey** – Participate in interactive monthly meetings designed to strengthen relationships, enhance emotional and mental well-being, and provide insights for personal and professional wealth-building.
-- **Referral Journey** – Share genuine referrals with CosmOrbiters to expand opportunities, build trust within the Universe, and cultivate mutual growth.
-- **Active Orbiter** – Take an active role in the Universe through consistent engagement, nurturing deeper relationships, maintaining personal well-being, and creating pathways for sustainable wealth.
-- **CosmOrbiter** – Elevate your journey by listing your business or profession, leveraging the UJustBe network to expand opportunities and build professional relationships.
-- **Accelerated Orbiter** – Blend the power of authentic referrals and active participation in UJustBe events to accelerate your journey, unlock new opportunities, and strengthen community bonds.
-- **CCAO (Consistent Contributing Active Orbiter)** – Achieve this status through regular contributions that enrich relationships, foster a balanced lifestyle, and drive meaningful impact.
-- **MentOrbiter** – Lead by inviting and enrolling your network. Empower them to build fulfilling relationships, nurture well-being, and create wealth through the UJustBe Universe.
+        - Monthly Meeting Journey – Participate in interactive monthly meetings designed to strengthen relationships, enhance emotional and mental well-being, and provide insights for personal and professional wealth-building.
 
-This journey invites you to embrace a balanced approach to life, uniting Relationship, Health, and Wealth to create a fulfilling experience within the UJustBe Universe.
+        - Referral Journey – Share genuine referrals with CosmOrbiters to expand opportunities, build trust within the Universe, and cultivate mutual growth.
 
-To support you, our dedicated Support Team, Nucleus Team, and your MentOrbiter ([Name of MentOrbiter]) will guide and assist you every step of the way.
+        - Active Orbiter – Take an active role in the Universe through consistent engagement, nurturing deeper relationships, maintaining personal well-being, and creating pathways for sustainable wealth.
 
-We are excited to see your growth and contributions. Let’s create meaningful connections and experiences together!
+        - CosmOrbiter – Elevate your journey by listing your business or profession, leveraging the UJustBe network to expand opportunities and build professional relationships.
 
-If you have any questions or need assistance, please feel free to reach out to us.`;
+        - Accelerated Orbiter – Blend the power of authentic referrals and active participation in UJustBe events to accelerate your journey, unlock new opportunities, and strengthen community bonds.
+
+        - CCAO (Consistent Contributing Active Orbiter) – Achieve this status through regular contributions that enrich relationships, foster a balanced lifestyle, and drive meaningful impact.
+
+        - MentOrbiter – Lead by inviting and enrolling your network. Empower them to build fulfilling relationships, nurture well-being, and create wealth through the UJustBe Universe.
+        
+        This journey invites you to embrace a balanced approach to life, uniting Relationship, Health, and Wealth to create a fulfilling experience within the UJustBe Universe.
+        
+        To support you, our dedicated Support Team, Nucleus Team, and your MentOrbiter ([Name of MentOrbiter]) will guide and assist you every step of the way.
+        
+        We are excited to see your growth and contributions. Let’s create meaningful connections and experiences together!
+        
+        If you have any questions or need assistance, please feel free to reach out to us.`;
+        break;
+   
+      case 'Withdrawn':
+        body = `Hi ${prospectName},\n\nWe wanted to let you know that we have received your decision to withdraw from the UJustBe enrollment process at this time.
+ 
+While we understand and respect your decision, please know that we are always here for you. If you ever choose to reconsider or would like to explore the benefits of rejoining, feel free to reach out. Your journey with us is important, and we’re always ready to support your growth when the time is right.
+ 
+Thank you for considering UJustBe, and we hope to have the opportunity to welcome you back in the future. `;
+        break;
+   
+  
+    }
+  
     break;
 
   default:
@@ -273,21 +335,55 @@ If you have any questions or need assistance, please feel free to reach out to u
           break;
       
         case 'Enrollment documents mail':
-          bodytext = `Hello ${prospectName},\n\nIt was a pleasure connecting with you! 🌟 
+          switch (status) {
+            case 'Sent':
+              bodytext = `Hello ${prospectName},\n\nIt was a pleasure connecting with you! 
       
       As discussed, we are happy to invite you to join UJustBe as an Orbiter.
       
-      We have shared an email with the details and next steps. Kindly check it and share your requested documents at your earliest convenience.
+      We have shared an email with the details and next steps. Kindly check it and share requested documents at your earliest convenience.
       
-      Looking forward to welcoming you into the UJustBe Universe! 😊`;
+      Looking forward to welcoming you into the UJustBe Universe! `;
+              break;
+            case 'Pending':
+              bodytext = `Hi ${prospectName},\n\nYou are just one step away from becoming an Orbiter in the UJustBe Universe!
+
+Some enrollment documents are still pending—feel free to reach out to your MentOrbiter or connect with the UJustBe Support Team to complete the process.
+
+We are here to support you and can’t wait to see your journey unfold! `;
+              break;
+            case 'Need Revision':
+              bodytext = `Hi ${prospectName},\n\nAs there is no response from your end we are going ahead with default option as adjustment of Enrollment fees against the referral reciprocation. 
+
+We’ve shared an email with the details with the process.`;
+              break;
+           
+            default:
+              bodytext = `Hi ${prospectName},\n\nYou've opted for ${status} as your payment method. If any change is needed, please let us know.`;
+          }
+         
           break;
       
         case 'Enrollment Fees Mail Status':
-          bodytext = `Hi ${prospectName},\n\nThank you for making an authentic choice to become an Orbiter in the UJustBe Universe 🌟
+          switch (status) {
+            case 'Sent':
+              bodytext = `Hi ${prospectName},\n\nThank you for making an authentic choice to become an Orbiter in the UJustBe Universe 🌟
       
       We have shared an email with the details of the one-time Orbiter Enrollment Fee (Rs. 1,000) and the available payment options.
       
       Kindly check your email and confirm your preferred option by replying there. Once we receive your confirmation, we will guide you through the next steps.`;
+              break;
+       
+            case 'Follow-up Required':
+              bodytext = `Hi ${prospectName},\n\nJust checking in to follow up on your decision regarding the enrollment fees for joining the UJustBe Universe.
+
+If you have any questions or need support, please connect with your MentOrbiter or our UJustBe Support Team.
+We are here to walk this journey with you! `;
+              break;
+           
+           
+          }
+      
           break;
       
         case 'Enrollment fees Option Opted for':
@@ -299,14 +395,14 @@ We’ve shared an email with the details for the payment.
 
 Kindly check your email and confirm once you make the payment. Once we receive your confirmation, we’ll share the invoice and guide you through the next steps. 
 
-Let us know if you need any help! 😊!`;
+Let us know if you need any help! !`;
               break;
             case 'Adjustment':
               bodytext = `Hi ${prospectName},\n\nThank you for confirming with your option of Adjustment of your one time enrolment fees against the referral reciprocation. 
 
 Kindly check your email and allow us to guide you through the next steps. 
 
-Let us know if you need any help! 😊 `;
+Let us know if you need any help!  `;
               break;
             case 'No Response Adjustment':
               bodytext = `Hi ${prospectName},\n\nAs there is no response from your end we are going ahead with default option as adjustment of Enrollment fees against the referral reciprocation. 
@@ -324,21 +420,38 @@ We’ve shared an email with the details with the process. `;
           break;
       
         case 'Enrollments Completion Status':
-          bodytext = `Dear ${prospectName},\n\n🌟 Welcome to the UJustBe Universe! 🌟
+          switch (status) {
+            case 'Completed':
+              bodytext = `Dear ${prospectName},\n\n Welcome to the UJustBe Universe! 
       
-      We are happy to welcome you as an Orbiter in the UJustBe Universe! 💫
-      
-      Your journey here is about building meaningful relationships, nurturing holistic health, and creating wealth through shared growth.
-      
-      🌱 Start with: 
-      🔹 Monthly Meetings 
-      🔹 Identifying authentic referrals 
-      🔹 Engaging actively in the community 
-      🔹 Growing into roles like CosmOrbiter, Accelerated Orbiter, MentOrbiter & more!
-      
-      You’ll be supported by your MentOrbiter and our Support & Nucleus Team throughout the way. 🫶
-      
-      Please check your mail for more details.`;
+              We are happy to welcome you as an Orbiter in the UJustBe Universe! 
+              
+              Your journey here is about building meaningful relationships, nurturing holistic health, and creating wealth through shared growth.
+              
+              Start with: 
+            Monthly Meetings 
+              Identifying authentic referrals 
+              Engaging actively in the community 
+              Growing into roles like CosmOrbiter, Accelerated Orbiter, MentOrbiter & more!
+              
+              You’ll be supported by your MentOrbiter and our Support & Nucleus Team throughout the way. 
+              
+              Please check your mail for more details.`;
+              break;
+       
+            case 'Withdrawn':
+              bodytext = `Hi ${prospectName},\n\nWe have noted that you have decided to withdraw from the enrollment process for now.
+
+If you ever choose to reconsider or need more details, we’re here to support you whenever you’re ready.
+
+Thank you for considering UJustBe, and we hope to reconnect in the future! `;
+              break;
+           
+            default:
+              bodytext = `Hi ${prospectName},\n\nYour Status is ${status}. If any change is needed, please let us know.`;
+          }
+         
+       
           break;
       
         default:

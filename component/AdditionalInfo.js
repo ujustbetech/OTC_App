@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc,collection,addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 import 'react-quill/dist/quill.snow.css';
@@ -46,38 +46,45 @@ const AditionalInfo = ({ id, data = { sections: [] }, fetchData })     => {
     console.log('Saving sections:', section);
   
     try {
-      const docRef = doc(db, 'Prospects', id);
-      await updateDoc(docRef, { sections: [section] }); // ✅ Save to Firestore
-      console.log('Sections saved successfully');
-      fetchData?.();
+      // 1. Update sections in an existing Prospect document
+      const existingDocRef = doc(db, 'Prospects', id);
+      await updateDoc(existingDocRef, { sections: [section] });
+      console.log('Sections updated successfully');
   
-      // ✨ After successful save, send Email and WhatsApp
+      // 2. Create a NEW Prospect document
+      const prospectRef = collection(db, 'Prospects');
+      const newDocRef = await addDoc(prospectRef, data);
+      const docId = newDocRef.id;
   
-      // Dummy data — You need to replace these with correct values from your data
-      const orbiterName = data.orbiterName || 'Orbiter'; 
-      const prospectEmail = data.email || 'orbiter@example.com'; 
-      const prospectName = data.prospectName || 'Prospect'; 
-      const formattedDate = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY format
-      const formLink = data.formLink || 'https://example.com/form'; 
-      const phone = data.prospectPhone || '9999999999'; 
+      // 3. Generate Form Link dynamically
+      const formLink = `https://otc-app.vercel.app/prospectfeedbackform/${docId}`;
+      console.log("Send this form link to Orbiter: ", formLink);
+  
+      // 4. Prepare data for Email and WhatsApp
+      const orbiterName = data.orbiterName || 'Orbiter';
+      const prospectEmail = data.email || 'orbiter@example.com';
+      const prospectName = data.prospectName || 'Prospect';
+      const formattedDate = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
+      const phone = data.prospectPhone || '9999999999';
   
       const emailBody = `
-Dear ${prospectName},\n\n
-It was a pleasure connecting with you and introducing UJustBe! 😊
-
-We truly appreciate your time and the insights you shared.
-
-To help us move forward meaningfully, we’d love to hear your feedback.
-
-Please take a few minutes to fill out this form: ${formLink}\n\n
-Thank you!
-`;
-
+  Dear ${prospectName},
   
-      // 📧 Send Email
+  It was a pleasure connecting with you and introducing UJustBe! 
+  
+  We truly appreciate your time and the insights you shared.
+  
+  To help us move forward meaningfully, we’d love to hear your feedback.
+  
+  Please take a few minutes to fill out this form: ${formLink}
+  
+  Thank you!
+      `;
+  
+      // 5. Send Email
       await sendAssessmentEmail(orbiterName, prospectEmail, prospectName, formattedDate, formLink);
   
-      // 💬 Send WhatsApp
+      // 6. Send WhatsApp Message
       await sendAssesmentMessage(orbiterName, prospectName, emailBody, phone);
   
     } catch (error) {
@@ -86,6 +93,7 @@ Thank you!
   
     setLoading(false);
   };
+  
   const sanitizeText = (text) => {
     return text
       .replace(/[\n\t]/g, ' ')          // Replace newlines and tabs with spaces
@@ -138,6 +146,7 @@ It was a pleasure connecting with you and introducing UJustBe. We truly apprecia
 
 To help us enhance our engagement and proceed further, we would love to hear your feedback. Please take a few moments to fill out the attached feedback form/link and share your thoughts with us within the next two working days. 
 
+Form Link : ${formLink}
  
 
 Your input is valuable, and we look forward to continuing this journey with you. 
@@ -193,7 +202,7 @@ Your input is valuable, and we look forward to continuing this journey with you.
       </li>
 
       <li className='form-row'>
-        <h4 className="prospect-label">Why UJustBe for Them:<sup>*</sup></h4>
+        <h4 className="prospect-label">Why UJustBe for Prospect:<sup>*</sup></h4>
         <div className="editor-wrapper">
           <ReactQuill
             theme="snow"

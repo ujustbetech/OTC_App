@@ -84,10 +84,11 @@ const [userSearch, setUserSearch] = useState('');
         orbiterName: '',
         occasion: '',
         discussionDetails: '',
-        orbiterSuggestions: '',
-        teamSuggestions: '',
-        referralPossibilities: ''
+        orbiterSuggestions: [''],
+        teamSuggestions: [''],
+        referralPossibilities: ['']
       });
+      
       fetchEntries(); // Refresh entries after saving
     } catch (err) {
       console.error('Error saving data:', err);
