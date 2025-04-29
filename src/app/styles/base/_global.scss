@@ -641,3 +641,32 @@ sup {
   font-size: 16px;
   color: red;
 }
+.btn-edit {
+  background-color: #f16f06;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  width: 40%;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+  background-color: #d85c03;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #b02a37;
+}
