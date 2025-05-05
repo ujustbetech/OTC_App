@@ -104,7 +104,7 @@ const Register = (props) => {
         // Default behavior: set selected user as MentOrbiter
         setName(user.name);
         setPhone(user.phone);
-        setOrbiterEmail(user.email);
+        setOrbiterEmail(user.Email);
       }
     
       setUserSearch('');
@@ -189,13 +189,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
     }
   };
          
-  useEffect(() => {
-    if (userType !== 'orbiter') {
-      setName(props?.data?.orbiterName || '');
-      setPhone(props?.data?.orbiterContact || '');
-      setOrbiterEmail(props?.data?.orbiterEmail || '');
-    }
-  }, [props.data, userType]);
+
    
 
   const handleSubmit = async (e) => {
@@ -450,7 +444,7 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
             <>
               <li className='form-row'>
                 <h4>Select MentOrbiter:<sup>*</sup></h4>
-                <div className='multipleitem'>
+                <div className='autosuggest'>
                   <input
                     type="text"
                     placeholder="Search Orbiter"
