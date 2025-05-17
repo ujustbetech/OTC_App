@@ -129,7 +129,7 @@ const Register = (props) => {
       
       Kindly share the filled form within 2 working days. If you need any support or have queries while filling it out, feel free to reach out.
       
-      Enclosed: [Prospect Assessment Form](${formLink})
+      Prospect Assessment Form: (${formLink})
       `;
       
         const templateParams = {
