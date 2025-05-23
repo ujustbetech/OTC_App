@@ -68,7 +68,7 @@ const ManageEvents = () => {
                     Back
                 </button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <table className='table-class'>
+             <table className='table-class'>
                     <thead>
                         <tr>
                             <th>Sr no</th>
@@ -79,7 +79,7 @@ const ManageEvents = () => {
                            
                           
                             <th>Date</th>
-                            <th>Registered At</th>
+                            <th>Type</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -95,7 +95,8 @@ const ManageEvents = () => {
                                 
                                   
                                     <td>{item.date}</td>
-                                    <td>{formatDate(item.registeredAt)}</td>
+                               <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
+
                                    <td>
          <div className='twobtn'>                  
     <button
