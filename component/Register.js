@@ -117,7 +117,10 @@ const Register = (props) => {
     const handleTypeChange = (e) => {
         setType(e.target.value);
     };
-  
+    const handleOccupationChange = (e) => {
+      setOccupation(e.target.value);
+  };
+
 
     const sendAssessmentEmail = async (orbiterName, orbiterEmail, prospectName, formattedDate, formLink) => {
       const body = `
@@ -129,7 +132,7 @@ const Register = (props) => {
       
       Kindly share the filled form within 2 working days. If you need any support or have queries while filling it out, feel free to reach out.
       
-      Prospect Assessment Form: ${formLink}
+    Prospect Assessment Form: ${formLink}
       `;
       
         const templateParams = {
@@ -261,6 +264,15 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
         });
         
       } else {
+         const formLink = `https://otc-app.vercel.app/prospectform/${docId}`;
+        console.log("Send this to Orbiter: ", formLink);
+  
+        // Send assessment email
+        await sendAssessmentEmail(name, orbiteremail, prospectName, formattedDate, formLink);
+  
+        // Optional WhatsApp message (uncomment if needed)
+        await sendAssesmentMessage(name, prospectName, phone,formLink);
+
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -397,18 +409,21 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
                 </div>
               </li>
   
+            
               <li className='form-row'>
-                <h4>Occupation:<sup>*</sup></h4>
+              <h4>Occupation:<sup>*</sup></h4>
                 <div className='multipleitem'>
-                  <input
-                    type="text"
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
-                    placeholder="Enter Occupation"
-                  />
+                <select value={occupation} onChange={handleOccupationChange}>
+                    <option value="Service">Service</option>
+                    <option value="Student">Student</option>
+                    <option value="Retired">Retired</option>
+                    <option value="Business">Business</option>
+                    <option value="professional">Professional</option>
+                    <option value="Housewife">Housewife</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </li>
-  
               <li className='form-row'>
                 <h4>Hobbies:<sup>*</sup></h4>
                 <div className='multipleitem'>
@@ -532,14 +547,17 @@ const sendAssesmentMessage = async (orbiterName, prospectName, phone,formLink) =
               </li>
   
               <li className='form-row'>
-                <h4>Occupation:<sup>*</sup></h4>
+              <h4>Occupation:<sup>*</sup></h4>
                 <div className='multipleitem'>
-                  <input
-                    type="text"
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
-                    placeholder="Enter Occupation"
-                  />
+                  <select value={occupation} onChange={handleOccupationChange}>
+                    <option value="Service">Service</option>
+                    <option value="Student">Student</option>
+                    <option value="Retired">Retired</option>
+                    <option value="Business">Business</option>
+                    <option value="professional">Professional</option>
+                    <option value="Housewife">Housewife</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </li>
   
