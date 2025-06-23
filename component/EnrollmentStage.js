@@ -32,10 +32,18 @@ const EnrollmentStage = ({ id, fetchData }) => {
 
           const savedStages = data?.enrollmentStages || [];
 
-          const merged = options.map((label) => {
-            const match = savedStages.find((item) => item.label === label);
-            return match || { label, checked: false, date: '', status: '' };
-          });
+         const merged = options.map((label) => {
+  const match = savedStages.find((item) => item.label === label);
+  return match || {
+    label,
+    checked: false,
+    date: '',
+    status: '',
+    sent: false,
+    mailStatus: 'Pending'
+  };
+});
+
 
           setRows(merged);
         } else {
@@ -103,20 +111,21 @@ const EnrollmentStage = ({ id, fetchData }) => {
     setRows(updated);
   };
 
-  const handleSave = async () => {
+const handleSave = async () => {
+  try {
     setLoading(true);
-    try {
-      const docRef = doc(db, 'Prospects', id);
-      await updateDoc(docRef, {
-        enrollmentStages: rows,
-      });
-      fetchData?.();
-      console.log('Enrollment data saved.');
-    } catch (err) {
-      console.error('Error saving:', err);
-    }
+    const docRef = doc(db, 'Prospects', id);
+    await updateDoc(docRef, {
+      enrollmentStages: rows,
+    });
+    Swal.fire('Saved!', 'Changes have been saved.', 'success');
+  } catch (err) {
+    console.error('Error saving data:', err);
+    Swal.fire('Error', 'Failed to save changes.', 'error');
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
  
   const handleSendEmail = async (index) => {
@@ -541,19 +550,18 @@ Thank you for considering UJustBe, and we hope to reconnect in the future! `;
                   onChange={(e) => handleChange(index, 'date', e.target.value)}
                 />
               </td>
-              <td>
-                <select
-                  value={row.status}
-                  onChange={(e) => handleChange(index, 'status', e.target.value)}
-                >
-                  <option value="">Select</option>
-                  {(dropdownOptions[row.label] || []).map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </td>
+           <td>
+  <select
+    value={row.status}
+    onChange={(e) => handleChange(index, 'status', e.target.value)}
+  >
+    <option value="">Select</option>
+    {(dropdownOptions[row.label] || []).map((opt) => (
+      <option key={opt} value={opt}>{opt}</option>
+    ))}
+  </select>
+</td>
+
               <td>
                 <button
                   className="m-button-7"

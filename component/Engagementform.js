@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs,doc,getDoc } from 'firebase/firestore';
 
 const EngagementForm = ({ id }) => {
   const [loading, setLoading] = useState(false);
@@ -109,10 +109,28 @@ const [userSearch, setUserSearch] = useState('');
       console.error('Error fetching data:', err);
     }
   };
+const fetchProspectName = async () => {
+  if (!id) return;
+  try {
+    const prospectRef = doc(db, 'Prospects', id);
+    const prospectSnap = await getDoc(prospectRef);
+    if (prospectSnap.exists()) {
+      const data = prospectSnap.data();
+      setFormData(prev => ({
+        ...prev,
+        orbiterName: data.prospectName || ''
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching prospect name:', err);
+  }
+};
 
-  useEffect(() => {
-    fetchEntries();
-  }, [id]);
+useEffect(() => {
+  fetchEntries();
+  fetchProspectName();
+}, [id]);
+
 
   return (
 <div>
@@ -135,19 +153,20 @@ const [userSearch, setUserSearch] = useState('');
       </li>
      
 
-      <li className='form-row'>
-        <label className="form-label">Name of the Orbiter</label>
-        <div className='multipleitem'>
-        <input
-          type="text"
-          placeholder="Search Orbiter"
-          value={userSearch || formData.orbiterName}
-          onChange={handleSearchUser}
-          required
-        />
-        </div>
-      </li>
-  
+  <li className='form-row'>
+  <label className="form-label">Name of the Orbiter</label>
+  <div className='multipleitem'>
+    <input
+      type="text"
+      placeholder="Search Orbiter"
+      value={formData.orbiterName}
+      onChange={(e) =>
+        setFormData(prev => ({ ...prev, orbiterName: e.target.value }))
+      }
+    />
+  </div>
+</li>
+
       {/* Orbiter Dropdown List */}
       {filteredUsers.length > 0 && (
         <ul className="dropdown-list">
@@ -268,13 +287,33 @@ const [userSearch, setUserSearch] = useState('');
         <tbody>
           {entries.map((entry) => (
             <tr key={entry.id}>
-              <td>{entry.callDate}</td>
+             <td>{new Date(entry.callDate).toLocaleString()}</td>
+
               <td>{entry.orbiterName}</td>
               <td>{entry.occasion}</td>
               <td>{entry.discussionDetails}</td>
-              <td>{entry.orbiterSuggestions}</td>
-              <td>{entry.teamSuggestions}</td>
-              <td>{entry.referralPossibilities}</td>
+              <td>
+  <ul>
+    {entry.orbiterSuggestions?.map((s, i) => (
+      <li key={i}>{s}</li>
+    ))}
+  </ul>
+</td>
+<td>
+  <ul>
+    {entry.teamSuggestions?.map((s, i) => (
+      <li key={i}>{s}</li>
+    ))}
+  </ul>
+</td>
+<td>
+  <ul>
+    {entry.referralPossibilities?.map((s, i) => (
+      <li key={i}>{s}</li>
+    ))}
+  </ul>
+</td>
+
             </tr>
           ))}
         </tbody>

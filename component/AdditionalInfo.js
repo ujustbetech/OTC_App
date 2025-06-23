@@ -41,20 +41,16 @@ const AditionalInfo = ({ id, data = { sections: [] }, fetchData })     => {
     setSection((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = async () => {
-    setLoading(true);
-    console.log('Saving sections:', section);
-  
-    try {
-      // 1. Update sections in an existing Prospect document
-      const existingDocRef = doc(db, 'Prospects', id);
-      await updateDoc(existingDocRef, { sections: [section] });
-      console.log('Sections updated successfully');
-  
-      // 2. Create a NEW Prospect document
-      const prospectRef = collection(db, 'Prospects');
-      const newDocRef = await addDoc(prospectRef, data);
-      const docId = newDocRef.id;
+ const handleSave = async () => {
+  setLoading(true);
+  console.log('Saving sections:', section);
+
+  try {
+    // Update sections in an existing Prospect document
+    const existingDocRef = doc(db, 'Prospects', id);
+    await updateDoc(existingDocRef, { sections: [section] });
+
+
   
       // 3. Generate Form Link dynamically
       const formLink = `https://otc-app.vercel.app/prospectfeedbackform/${docId}`;

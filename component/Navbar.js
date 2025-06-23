@@ -29,6 +29,17 @@ const Navbar = (props) => {
                                 <li><Link href="/admin/event/manageEvent">Manage Prospects</Link></li>
                             </ul>
                         </li>
+                            {/* <li>
+                            <Link href="/admin/event/addEvent">
+                                <span className="icons"><MdEventAvailable /></span>
+                                <span className="linklabel">Conclave</span>
+                                <span className="submenuIcon"><MdOutlineKeyboardArrowDown /></span>
+                            </Link>
+                            <ul>
+                                <li><Link href="/admin/event/create-event">Add Conclave</Link></li>
+                                <li><Link href="/admin/event/manageEvent">Manage Conclave</Link></li>
+                            </ul>
+                        </li> */}
                         {/* <li>
                             <Link href="/admin/event/addEvent">
                                 <span className="icons"><MdImage /></span>
@@ -41,7 +52,17 @@ const Navbar = (props) => {
                             </ul>
                         </li> */}
                         {/* Users */}
-                        <li>
+                        {/* <li>
+                            <Link href="/admin/event/birthday">
+                                <span className="icons"><FaRegUser /></span>
+                                <span className="linklabel">Birthday Canvas</span>
+                                <span className="submenuIcon"><MdOutlineKeyboardArrowDown /></span>
+                            </Link>
+                            <ul>
+                                <li><Link href="/admin/event/birthday">Add birthday</Link></li>
+                            </ul>
+                        </li> */}
+                          <li>
                             <Link href="/admin/event/userlist">
                                 <span className="icons"><FaRegUser /></span>
                                 <span className="linklabel">Users</span>
@@ -51,14 +72,19 @@ const Navbar = (props) => {
                                 <li><Link href="/admin/event/userlist">Users Listing</Link></li>
                             </ul>
                         </li>
-                     
+                        {/* <li>
+                            <Link href="/admin/add-users/">
+                                <span className="icons"><RiListSettingsLine /></span>
+                                <span className="linklabel">Send Link</span>
+                            </Link>
+                        </li> */}
                         {/* Upload Excel */}
-                        <li>
+                        {/* <li>
                             <Link href="/admin/event/upload">
                                 <span className="icons"><RiListSettingsLine /></span>
                                 <span className="linklabel">Upload Excel</span>
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </nav>
             )}

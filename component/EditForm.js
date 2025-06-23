@@ -144,8 +144,9 @@ const prospectDocRef = doc(db, 'Prospects', id);
     return (
       
            <div>
+         
                 <div>
-                    <h2>{prospectName}'s Details</h2>
+                      <h2>{prospectName}'s Details</h2> 
                     <ul>
                     <li className='form-row'>
                     <h4>Select Orbiter:<sup>*</sup></h4>

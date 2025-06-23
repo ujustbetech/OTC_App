@@ -68,7 +68,7 @@ const ManageEvents = () => {
                     Back
                 </button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-             <table className='table-class'>
+                <table className='table-class'>
                     <thead>
                         <tr>
                             <th>Sr no</th>
@@ -83,36 +83,34 @@ const ManageEvents = () => {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {prospects.length > 0 ? (
-                            prospects.map((item, index) => (
-                                <tr key={item.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.prospectName}</td>
-                                 
-                                    <td>{item.occupation}</td>
-                                    <td>{item.orbiterName}</td>
-                                
-                                  
-                                    <td>{item.date}</td>
-                               <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
-
-                                   <td>
-         <div className='twobtn'>                  
-    <button
-        className="btn-edit"
-        onClick={() => handleEdit(item.id)}
-    >
-       ✎ Edit
-    </button>
-    <button
-        className="btn-delete"
-        onClick={() => handleDelete(item.id)}
-    >
-        🗑 Delete
-    </button>
-    </div>    
-</td>
+                 <tbody>
+  {prospects.length > 0 ? (
+    [...prospects]
+      .sort((a, b) => a.prospectName.localeCompare(b.prospectName))
+      .map((item, index) => (
+        <tr key={item.id}>
+          <td>{index + 1}</td>
+          <td>{item.prospectName}</td>
+          <td>{item.occupation}</td>
+          <td>{item.orbiterName}</td>
+          <td>{item.date}</td>
+          <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
+          <td>
+            <div className='twobtn'>                  
+              <button
+                className="btn-edit"
+                onClick={() => handleEdit(item.id)}
+              >
+                ✎ Edit
+              </button>
+              <button
+                className="btn-delete"
+                onClick={() => handleDelete(item.id)}
+              >
+                🗑 Delete
+              </button>
+            </div>
+          </td>
 
                                 </tr>
                             ))
