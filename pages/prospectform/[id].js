@@ -6,13 +6,18 @@ import "../../src/app/styles/main.scss";
 import "../../pages/feedback.css";
 import { useRouter } from "next/router";
 
+
+
 const tabs = ["1", "2", "3", "4"];
+
+
 
 const initialFormState = {
   fullName: "",
   phoneNumber: "",
   email: "",
-  cityCountry: "",
+  country: "",
+  city: "",
   profession: "",
   companyName: "",
   industry: "",
@@ -50,9 +55,32 @@ const contributionOptions = [
 const ProspectForm = () => {
   const router = useRouter();
   const { id } = router.query;
-
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
   const [activeTab, setActiveTab] = useState(0); // Start with the first tab
+  useEffect(() => {
+    fetch('https://countriesnow.space/api/v0.1/countries/positions')
+      .then(res => res.json())
+      .then(data => setCountries(data.data.map(c => c.name)));
+  }, []);
+
+  const handleCountryChange = async (e) => {
+    const country = e.target.value;
+    setFormData(prev => ({ ...prev, country, city: '' }));
+
+    const response = await fetch('https://countriesnow.space/api/v0.1/countries/cities', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country })
+    });
+    const data = await response.json();
+    setCities(data.data);
+  };
+
+  const handleCityChange = (e) => {
+    setFormData(prev => ({ ...prev, city: e.target.value }));
+  };
 
   useEffect(() => {
     const fetchProspectDetails = async () => {
@@ -123,7 +151,7 @@ const ProspectForm = () => {
       setActiveTab(activeTab - 1);
     }
   };
-
+ 
   return (
     <section className="feedbackContainer">
       <div className="feedback_logo">
@@ -135,7 +163,7 @@ const ProspectForm = () => {
   {tabs.map((tab, index) => (
     <div
       key={tab}
-      className={`step ${activeTab === index ? "active" : ""}`}
+      className={`step ${activeTab === index ? "active" : ""}`} 
       onClick={() => setActiveTab(index)}
     >
       {tab}
@@ -162,8 +190,28 @@ const ProspectForm = () => {
             <div className="input-group"><label>Prospect Name</label><input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required /></div>
             <div className="input-group"><label>Contact Number</label><input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required /></div>
             <div className="input-group"><label>Email Address</label><input type="email" name="email" value={formData.email} onChange={handleChange} required /></div>
-            <div className="input-group"><label>City & Country</label><input type="text" name="cityCountry" value={formData.cityCountry} onChange={handleChange} required /></div>
-            <div className="input-group"><label>Profession</label><input type="text" name="profession" value={formData.profession} onChange={handleChange} required /></div>
+            <div>
+      <div className="input-group">
+        <label>Country</label>
+        <select value={formData.country} onChange={handleCountryChange} required>
+          <option value="">Select Country</option>
+          {countries.map((country, idx) => (
+            <option key={idx} value={country}>{country}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="input-group">
+        <label>City</label>
+        <select value={formData.city} onChange={handleCityChange} required>
+          <option value="">Select City</option>
+          {cities.map((city, idx) => (
+            <option key={idx} value={city}>{city}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+            <div className="input-group"><label>Occupation</label><input type="text" name="profession" value={formData.profession} onChange={handleChange} required /></div>
             <div className="input-group"><label>Company</label><input type="text" name="companyName" value={formData.companyName} onChange={handleChange} /></div>
             <div className="input-group"><label>Industry</label><input type="text" name="industry" value={formData.industry} onChange={handleChange} required /></div>
             <div className="input-group"><label>Social Profile</label><input type="text" name="socialProfile" value={formData.socialProfile} onChange={handleChange} /></div>

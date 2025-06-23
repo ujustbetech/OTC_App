@@ -936,6 +936,7 @@ $italianfont:'Italianno', ;
           font-weight: 400;
           font-size: 18px;
           padding: 10px;
+              margin-bottom: 20px;
           border-radius: 20px;
           width: 100%;
           max-width: 120px;
@@ -2254,6 +2255,7 @@ select {
     border: 1px solid #d1a481;
     font-weight: 400;
     font-size: 18px;
+        margin-bottom: 20px;
     padding: 10px;
     border-radius: 20px;
     width: 100%;
@@ -2337,7 +2339,7 @@ background-size: cover;
 }
 
 .login-button {
-  width: 50%;
+  width: 10%;
   padding: 0.75rem;
   background-color: #f16f06;
   color: white;

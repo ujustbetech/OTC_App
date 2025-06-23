@@ -1475,3 +1475,10 @@ $italianfont:'Italianno', ;
 .m-button-7:active {
   transform: scale(0.98); /* Slight button press effect */
 }
+.separator {
+  border: 0;
+  height: 1px;
+  background: #ccc;
+  margin: 40px 0;
+  padding: 10px;
+}
