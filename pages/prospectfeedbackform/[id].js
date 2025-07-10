@@ -49,16 +49,8 @@ const ProspectFeedbackForm = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    mentorName: '',
-    interestLevel: '',
-    interestAreas: [],
-    communicationOptions: [], // ✅ This must be initialized as an array
-    additionalComments: ''
-  });
+  const [formData, setFormData] = useState(initialFormState);
+
   
   const [activeTab, setActiveTab] = useState(0); // Start with the first tab
 
@@ -237,7 +229,8 @@ const ProspectFeedbackForm = () => {
             type="checkbox"
             id={`communication-${idx}`}
             value={option}
-            checked={formData.communicationOptions.includes(option)}
+          checked={formData.communicationOptions?.includes(option)}
+
             onChange={(e) => handleCheckboxChange(e, "communicationOptions")}
           />
           <label htmlFor={`communication-${idx}`}>{option}</label>
