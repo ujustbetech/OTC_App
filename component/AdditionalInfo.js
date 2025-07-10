@@ -53,7 +53,8 @@ const AditionalInfo = ({ id, data = { sections: [] }, fetchData })     => {
 
   
       // 3. Generate Form Link dynamically
-      const formLink = `https://otc-app.vercel.app/prospectfeedbackform/${docId}`;
+     const formLink = `https://otc-app.vercel.app/prospectfeedbackform/${id}`;
+
       console.log("Send this form link to Orbiter: ", formLink);
   
       // 4. Prepare data for Email and WhatsApp
