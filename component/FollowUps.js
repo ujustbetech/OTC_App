@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc,collection,getDocs } from 'firebase/firestore';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
 import { db } from '../firebaseConfig';
@@ -103,39 +103,45 @@ const Followup = ({ id, data = { followups: [], comments: [] ,event: [] }, fetch
       setRescheduleReason('');
   
       // WhatsApp messages
-      const messages = [
-        {
-          name: data.prospectName,
-          phone: data.prospectPhone,
-          date: formattedEventDate,
-          zoomLink: eventMode === 'online' ? zoomLink : 'N/A',
-        },
-        {
-          name: data.orbiterName,
-          phone: data.orbiterContact,
-          date: formattedEventDate,
-          zoomLink: eventMode === 'online' ? zoomLink : 'N/A',
-        }
-      ];
+     const messages = [
+  {
+    name: data.prospectName,
+    phone: data.prospectPhone,
+    date: formattedEventDate,
+    zoomLink: eventMode === 'online' ? zoomLink : '',
+    venue: eventMode === 'offline' ? venue : ''
+  },
+  {
+    name: data.orbiterName,
+    phone: data.orbiterContact,
+    date: formattedEventDate,
+    zoomLink: eventMode === 'online' ? zoomLink : '',
+    venue: eventMode === 'offline' ? venue : ''
+  }
+];
+
   
-      for (const msg of messages) {
-        await sendWhatsAppMessage({
-          ...msg,
-          isReschedule: rescheduleMode,
-          reason: rescheduleReason
-        });
-      }
+   for (const msg of messages) {
+  await sendWhatsAppMessage({
+    ...msg,
+    isReschedule: rescheduleMode,
+    reason: rescheduleReason,
+    venue: eventMode === 'offline' ? venue : ''
+  });
+}
+
   
       // Send email to prospect
-      await sendEmailToProspect(
-        data.prospectName,
-        data.email,
-        formatReadableDate(eventDate),
-        eventDetails.zoomLink,
-        rescheduleMode,        // <-- whether it's a reschedule
-        rescheduleReason       // <-- reason to include in email
-      );
-      
+  await sendEmailToProspect(
+  data.prospectName,
+  data.email,
+  formattedEventDate,
+  eventMode === 'online' ? zoomLink : '',
+  rescheduleMode,
+  rescheduleReason,
+  eventMode === 'offline' ? venue : ''
+);
+
   
     } catch (error) {
       console.error('Error saving event or sending messages:', error);
@@ -143,87 +149,106 @@ const Followup = ({ id, data = { followups: [], comments: [] ,event: [] }, fetch
   };
 
 
-  const sendEmailToProspect = async (prospectName, email, date, zoomLink, isReschedule = false, reason = '') => {
-    const body = isReschedule
-      ? `Dear ${prospectName},
-  
-  As you are aware, due to ${reason}, we need to reschedule our upcoming call.
-  
-  We are available for the call on ${date}. Please confirm if this works for you, or let us know a convenient time within the next two working days so we can align accordingly.`
-      : `Thank you for confirming your availability. We look forward to connecting with you and sharing insights about UJustBe and how it fosters meaningful contributions in the areas of Relationship, Health, and Wealth.
-  
-  Schedule details:
-  
-  Date: ${date}  
-  Zoom Link: ${zoomLink}
-  
-  Our conversation will be an opportunity to explore possibilities, answer any questions you may have, and understand how UJustBe aligns with your aspirations.
-  
-  Looking forward to speaking with you soon!`;
-  
-    const templateParams = {
-      prospect_name: prospectName,
-      to_email: email,
-      body,
-    };
-  
-    try {
-      await emailjs.send(
-        'service_acyimrs',
-        'template_cdm3n5x',
-        templateParams,
-        'w7YI9DEqR9sdiWX9h'
-      );
-  
-      console.log(`✅ Email sent to ${prospectName} (${email})`);
-    } catch (error) {
-      console.error(`❌ Failed to send email to ${prospectName}:`, error);
-    }
+const sendEmailToProspect = async (prospectName, email, date, zoomLink, isReschedule = false, reason = '', venue = '') => {
+ const scheduleDetails = zoomLink
+  ? `Zoom Link: ${zoomLink}`
+  : venue
+    ? `Venue: ${venue}`
+    : 'Details will be shared soon';
+
+const body = isReschedule
+  ? `Dear ${prospectName},
+
+As you are aware, due to ${reason}, we need to reschedule our upcoming call.
+
+We are available for the call on ${date}. Please confirm if this works for you, or let us know a convenient time within the next two working days so we can align accordingly.`
+  : `Thank you for confirming your availability. We look forward to connecting with you and sharing insights about UJustBe and how it fosters meaningful contributions in the areas of Relationship, Health, and Wealth.
+
+Schedule details:
+
+Date: ${date}  
+${scheduleDetails}
+
+Our conversation will be an opportunity to explore possibilities, answer any questions you may have, and understand how UJustBe aligns with your aspirations.
+
+Looking forward to speaking with you soon! `;
+
+  const templateParams = {
+    prospect_name: prospectName,
+    to_email: email,
+    body,
   };
+
+  try {
+    await emailjs.send(
+      'service_acyimrs',
+      'template_cdm3n5x',
+      templateParams,
+      'w7YI9DEqR9sdiWX9h'
+    );
+
+    console.log(`✅ Email sent to ${prospectName} (${email})`);
+  } catch (error) {
+    console.error(`❌ Failed to send email to ${prospectName}:`, error);
+  }
+};
+
   
-  
-  const sendWhatsAppMessage = async ({ name, phone, date, zoomLink, isReschedule = false, reason = '' }) => {
-    const payload = {
-      messaging_product: 'whatsapp',
-      to: `91${phone}`,
-      type: 'template',
-      template: {
-        name: isReschedule ? 'reschedule_meeting_otc' : 'schedule_message_otc',
-        language: { code: 'en' },
-        components: [
-          {
-            type: 'body',
-            parameters: isReschedule
-              ? [
-                  { type: 'text', text: name },
-                   { type: 'text', text: reason },
-                   { type: 'text', text: date }
-                ]
-              : [
-                  { type: 'text', text: name },
-                  { type: 'text', text: date },
-                  { type: 'text', text: zoomLink }
-                ]
-          }
-        ]
-      }
-    };
-  
-    try {
-      const res = await axios.post(WHATSAPP_API_URL, payload, {
-        headers: {
-          Authorization: WHATSAPP_API_TOKEN,
-          'Content-Type': 'application/json',
+const sendWhatsAppMessage = async ({
+  name,
+  phone,
+  date,
+  zoomLink,
+  isReschedule = false,
+  reason = '',
+  venue = ''
+}) => {
+  const payload = {
+    messaging_product: 'whatsapp',
+    to: `91${phone}`,
+    type: 'template',
+    template: {
+      name: isReschedule ? 'reschedule_meeting_otc' : 'schedule_message_otc',
+      language: { code: 'en' },
+      components: [
+        {
+          type: 'body',
+          parameters: isReschedule
+            ? [
+                { type: 'text', text: name },
+                { type: 'text', text: reason },
+                { type: 'text', text: date }
+              ]
+            : [
+                { type: 'text', text: name },
+                { type: 'text', text: date },
+                {
+                  type: 'text',
+                  text: zoomLink
+                    ? `Zoom Link: ${zoomLink}`
+                    : `Venue: ${venue}`
+                }
+              ]
         }
-      });
-  
-      console.log(`✅ WhatsApp message sent to ${name} (${phone})`);
-    } catch (err) {
-      console.error(`❌ Failed to send message to ${name}:`, err.response?.data || err.message);
+      ]
     }
   };
-  
-  
+
+  try {
+    await axios.post(WHATSAPP_API_URL, payload, {
+      headers: {
+        Authorization: WHATSAPP_API_TOKEN,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log(`✅ WhatsApp message sent to ${name} (${phone})`);
+  } catch (err) {
+    console.error(`❌ Failed to send message to ${name}:`, err.response?.data || err.message);
+  }
+};
+
+
 // Function to send thank you message
 const sendThankYouMessage = async (name, phone) => {
   const payload = {
