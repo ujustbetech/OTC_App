@@ -68,35 +68,40 @@ const [userSearch, setUserSearch] = useState('');
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = async () => {
-    if (!id) {
-      alert('Prospect ID missing!');
-      return;
-    }
+ const handleSave = async () => {
+  if (!id) {
+    alert('Prospect ID missing!');
+    return;
+  }
 
-    setLoading(true);
-    try {
-      const stage5Ref = collection(db, 'Prospects', id, 'engagementform');
-      await addDoc(stage5Ref, formData);
-      alert('Data saved successfully!');
-      setFormData({
-        callDate: '',
-        orbiterName: '',
-        occasion: '',
-        discussionDetails: '',
-        orbiterSuggestions: [''],
-        teamSuggestions: [''],
-        referralPossibilities: ['']
-      });
-      
-      fetchEntries(); // Refresh entries after saving
-    } catch (err) {
-      console.error('Error saving data:', err);
-      alert('Failed to save data.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const stage5Ref = collection(db, 'Prospects', id, 'engagementform');
+    await addDoc(stage5Ref, {
+      ...formData,
+      createdAt: new Date(),   // ✅ first created
+      updatedAt: new Date()    // ✅ initially same as createdAt
+    });
+    alert('Data saved successfully!');
+    setFormData({
+      callDate: '',
+      orbiterName: '',
+      occasion: '',
+      discussionDetails: '',
+      orbiterSuggestions: [''],
+      teamSuggestions: [''],
+      referralPossibilities: ['']
+    });
+
+    fetchEntries();
+  } catch (err) {
+    console.error('Error saving data:', err);
+    alert('Failed to save data.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const fetchEntries = async () => {
     if (!id) return;
@@ -273,50 +278,56 @@ useEffect(() => {
       <p className="no-data">No data found.</p>
     ) : (
       <table className="entries-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Orbiter Name</th>
-            <th>Occasion</th>
-            <th>Discussion</th>
-            <th>Orbiter Suggestions</th>
-            <th>Team Suggestions</th>
-            <th>Referrals</th>
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map((entry) => (
-            <tr key={entry.id}>
-             <td>{new Date(entry.callDate).toLocaleString()}</td>
-
-              <td>{entry.orbiterName}</td>
-              <td>{entry.occasion}</td>
-              <td>{entry.discussionDetails}</td>
-              <td>
-  <ul>
-    {entry.orbiterSuggestions?.map((s, i) => (
-      <li key={i}>{s}</li>
-    ))}
-  </ul>
-</td>
-<td>
-  <ul>
-    {entry.teamSuggestions?.map((s, i) => (
-      <li key={i}>{s}</li>
-    ))}
-  </ul>
-</td>
-<td>
-  <ul>
-    {entry.referralPossibilities?.map((s, i) => (
-      <li key={i}>{s}</li>
-    ))}
-  </ul>
-</td>
-
-            </tr>
+      
+      <thead>
+  <tr>
+    <th>Date</th>
+    <th>Orbiter Name</th>
+    <th>Occasion</th>
+    <th>Discussion</th>
+    <th>Orbiter Suggestions</th>
+    <th>Team Suggestions</th>
+    <th>Referrals</th>
+    <th>Last Updated</th> {/* ✅ New column */}
+  </tr>
+</thead>
+<tbody>
+  {entries.map((entry) => (
+    <tr key={entry.id}>
+      <td>{new Date(entry.callDate).toLocaleString()}</td>
+      <td>{entry.orbiterName}</td>
+      <td>{entry.occasion}</td>
+      <td>{entry.discussionDetails}</td>
+      <td>
+        <ul>
+          {entry.orbiterSuggestions?.map((s, i) => (
+            <li key={i}>{s}</li>
           ))}
-        </tbody>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          {entry.teamSuggestions?.map((s, i) => (
+            <li key={i}>{s}</li>
+          ))}
+        </ul>
+      </td>
+      <td>
+        <ul>
+          {entry.referralPossibilities?.map((s, i) => (
+            <li key={i}>{s}</li>
+          ))}
+        </ul>
+      </td>
+      <td>
+        {entry.updatedAt
+          ? new Date(entry.updatedAt.seconds * 1000).toLocaleString()
+          : "—"}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
     )}
 </div>
