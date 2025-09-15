@@ -9,15 +9,19 @@ const EngagementForm = ({ id }) => {
 const [filteredUsers, setFilteredUsers] = useState([]);
 const [userSearch, setUserSearch] = useState('');
 
-  const [formData, setFormData] = useState({
-    callDate: '',
-    orbiterName: '',
-    occasion: '',
-    discussionDetails: '',
-    orbiterSuggestions: [''],
-    teamSuggestions: [''],
-    referralPossibilities: ['']
-  });
+const [formData, setFormData] = useState({
+  callDate: '',
+  orbiterName: '',
+  occasion: '',
+  referralId: '',
+  eventName: '',
+  otherOccasion: '',
+  discussionDetails: '',
+  orbiterSuggestions: [''],
+  teamSuggestions: [''],
+  referralPossibilities: ['']
+});
+
 
   const handleArrayChange = (field, index, value) => {
     const updated = [...formData[field]];
@@ -187,19 +191,73 @@ useEffect(() => {
         </ul>
       )}
   
-      {/* Form Text Inputs */}
-      <li className='form-row'>
-        <label className="form-label">Occasion</label>
-        <div className='multipleitem'>
-        <input
-          type="text"
-          name="occasion"
-          value={formData.occasion}
-          onChange={handleChange}
-          required
-        />
-        </div>
-      </li>
+  {/* Occasion Dropdown */}
+<li className='form-row'>
+  <label className="form-label">Occasion</label>
+  <div className='multipleitem'>
+    <select
+      name="occasion"
+      value={formData.occasion}
+      onChange={handleChange}
+      required
+    >
+      <option value="">-- Select Occasion --</option>
+      <option value="Referral Follow up">Referral Follow up</option>
+      <option value="Rapport building">Rapport building</option>
+      <option value="Event Calling">Event Calling</option>
+      <option value="Enquiry Follow ups">Enquiry Follow ups</option>
+      <option value="Birthday Wishes">Birthday Wishes</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+</li>
+
+{/* Conditional extra input based on occasion */}
+{formData.occasion === "Referral Follow up" && (
+  <li className="form-row">
+    <label className="form-label">Referral ID</label>
+      <div className='multipleitem'>
+    <input
+      type="text"
+      name="referralId"
+      value={formData.referralId || ""}
+      onChange={handleChange}
+      placeholder="Enter Referral ID"
+    />
+    </div>
+  </li>
+)}
+
+{formData.occasion === "Event Calling" && (
+  <li className="form-row">
+    <label className="form-label">Event Name</label>
+    <div className='multipleitem'>
+    <input
+      type="text"
+      name="eventName"
+      value={formData.eventName || ""}
+      onChange={handleChange}
+      placeholder="Enter Event Name"
+    />
+    </div>
+  </li>
+)}
+
+{formData.occasion === "Other" && (
+  <li className="form-row">
+    <label className="form-label">Other Occasion</label>
+    <div className='multipleitem'>
+    <input
+      type="text"
+      name="otherOccasion"
+      value={formData.otherOccasion || ""}
+      onChange={handleChange}
+      placeholder="Enter Occasion Name"
+    />
+    </div>
+  </li>
+)}
+
 
 
   <li className='form-row'>
@@ -277,58 +335,69 @@ useEffect(() => {
     {entries.length === 0 ? (
       <p className="no-data">No data found.</p>
     ) : (
-      <table className="entries-table">
-      
-      <thead>
-  <tr>
-    <th>Date</th>
-    <th>Orbiter Name</th>
-    <th>Occasion</th>
-    <th>Discussion</th>
-    <th>Orbiter Suggestions</th>
-    <th>Team Suggestions</th>
-    <th>Referrals</th>
-    <th>Last Updated</th> {/* ✅ New column */}
-  </tr>
-</thead>
-<tbody>
-  {entries.map((entry) => (
-    <tr key={entry.id}>
-      <td>{new Date(entry.callDate).toLocaleString()}</td>
-      <td>{entry.orbiterName}</td>
-      <td>{entry.occasion}</td>
-      <td>{entry.discussionDetails}</td>
-      <td>
-        <ul>
-          {entry.orbiterSuggestions?.map((s, i) => (
-            <li key={i}>{s}</li>
-          ))}
-        </ul>
-      </td>
-      <td>
-        <ul>
-          {entry.teamSuggestions?.map((s, i) => (
-            <li key={i}>{s}</li>
-          ))}
-        </ul>
-      </td>
-      <td>
-        <ul>
-          {entry.referralPossibilities?.map((s, i) => (
-            <li key={i}>{s}</li>
-          ))}
-        </ul>
-      </td>
-      <td>
-        {entry.updatedAt
-          ? new Date(entry.updatedAt.seconds * 1000).toLocaleString()
-          : "—"}
-      </td>
+ <table className="entries-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Orbiter Name</th>
+      <th>Occasion</th>
+      <th>Discussion</th>
+      <th>Orbiter Suggestions</th>
+      <th>Team Suggestions</th>
+      <th>Referrals</th>
+      <th>Last Updated</th> {/* ✅ New column */}
     </tr>
-  ))}
-</tbody>
+  </thead>
+  <tbody>
+    {entries.map((entry) => (
+      <tr key={entry.id}>
+        <td>{new Date(entry.callDate).toLocaleString()}</td>
+        <td>{entry.orbiterName}</td>
+        <td>
+          {entry.occasion}
+          {entry.occasion === "Referral Follow up" && entry.referralId
+            ? ` - ${entry.referralId}`
+            : ""}
+          {entry.occasion === "Event Calling" && entry.eventName
+            ? ` - ${entry.eventName}`
+            : ""}
+          {entry.occasion === "Other" && entry.otherOccasion
+            ? ` - ${entry.otherOccasion}`
+            : ""}
+        </td>
+        <td>{entry.discussionDetails}</td>
+        <td>
+          <ul>
+            {entry.orbiterSuggestions?.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ul>
+        </td>
+        <td>
+          <ul>
+            {entry.teamSuggestions?.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ul>
+        </td>
+        <td>
+          <ul>
+            {entry.referralPossibilities?.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ul>
+        </td>
+        <td>
+          {entry.updatedAt
+            ? new Date(entry.updatedAt.seconds * 1000).toLocaleString()
+            : "—"}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-      </table>
+
     )}
 </div>
   
