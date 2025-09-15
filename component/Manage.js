@@ -132,43 +132,37 @@ const formatDate = (dateValue) => {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {prospects.length > 0 ? (
-                            [...prospects]
-                                .sort((a, b) => a.prospectName.localeCompare(b.prospectName))
-                                .map((item, index) => (
-                                    <tr key={item.id}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.prospectName}</td>
-                                        <td>{item.occupation}</td>
-                                        <td>{item.orbiterName}</td>
-                                       <td>{formatDate(item.lastEngagementDate)}</td>
+                 <tbody>
+    {prospects.length > 0 ? (
+        [...prospects]
+            .sort((a, b) => {
+                const dateA = a.lastEngagementDate?.seconds || new Date(a.lastEngagementDate).getTime() || 0;
+                const dateB = b.lastEngagementDate?.seconds || new Date(b.lastEngagementDate).getTime() || 0;
+                return dateB - dateA; // Newest first
+            })
+            .map((item, index) => (
+                <tr key={item.id}>
+                    <td>{index + 1}</td>
+                    <td>{item.prospectName}</td>
+                    <td>{item.occupation}</td>
+                    <td>{item.orbiterName}</td>
+                    <td>{formatDate(item.lastEngagementDate)}</td>
+                    <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
+                    <td>
+                        <div className='twobtn'>
+                            <button className="btn-edit" onClick={() => handleEdit(item.id)}>✎ Edit</button>
+                            <button className="btn-delete" onClick={() => handleDelete(item.id)}>🗑 Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            ))
+    ) : (
+        <tr>
+            <td colSpan="10" style={{ textAlign: 'center' }}>No prospects found.</td>
+        </tr>
+    )}
+</tbody>
 
-                                        <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
-                                        <td>
-                                            <div className='twobtn'>
-                                                <button
-                                                    className="btn-edit"
-                                                    onClick={() => handleEdit(item.id)}
-                                                >
-                                                    ✎ Edit
-                                                </button>
-                                                <button
-                                                    className="btn-delete"
-                                                    onClick={() => handleDelete(item.id)}
-                                                >
-                                                    🗑 Delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                        ) : (
-                            <tr>
-                                <td colSpan="10" style={{ textAlign: 'center' }}>No prospects found.</td>
-                            </tr>
-                        )}
-                    </tbody>
                 </table>
             </section>
         </>
