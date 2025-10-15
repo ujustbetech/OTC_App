@@ -3,6 +3,7 @@ import { db } from '../firebaseConfig';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
+import ExportProspectsPage from '../pages/admin/ExportProspects';
 
 const ManageEvents = () => {
     const router = useRouter();
@@ -11,65 +12,72 @@ const ManageEvents = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchProspects = async () => {
-            try {
-                const prospectCollection = collection(db, 'Prospects');
-                const snapshot = await getDocs(prospectCollection);
+    const fetchProspects = async () => {
+        try {
+            const prospectCollection = collection(db, 'Prospects');
+            const snapshot = await getDocs(prospectCollection);
 
-             const prospectList = await Promise.all(
-  snapshot.docs.map(async (docSnap) => {
-    const data = docSnap.data();
+            const prospectList = await Promise.all(
+                snapshot.docs.map(async (docSnap) => {
+                    const data = docSnap.data();
 
-    // Fetch engagement subcollection
-    const engagementCol = collection(db, `Prospects/${docSnap.id}/engagementform`);
-    const engagementSnap = await getDocs(engagementCol);
+                    // Fetch engagement subcollection
+                    const engagementCol = collection(db, `Prospects/${docSnap.id}/engagementform`);
+                    const engagementSnap = await getDocs(engagementCol);
 
-    let lastEngagementDate = null;
+                    let lastEngagementDate = null;
+                    let nextFollowupDate = null;
 
-    if (!engagementSnap.empty) {
-      const engagements = engagementSnap.docs.map(e => e.data());
+                    if (!engagementSnap.empty) {
+                        const engagements = engagementSnap.docs.map(e => e.data());
 
-      // Sort by updatedAt or createdAt
-      engagements.sort((a, b) => {
-        const dateA = a.updatedAt?.seconds || a.createdAt?.seconds || 0;
-        const dateB = b.updatedAt?.seconds || b.createdAt?.seconds || 0;
-        return dateB - dateA;
-      });
+                        // Sort by updatedAt or createdAt (latest first)
+                        engagements.sort((a, b) => {
+                            const dateA = a.updatedAt?.seconds || a.createdAt?.seconds || 0;
+                            const dateB = b.updatedAt?.seconds || b.createdAt?.seconds || 0;
+                            return dateB - dateA;
+                        });
 
-      const latest = engagements[0];
-      // Prefer callDate if exists, otherwise fallback to updatedAt
-    if (latest.callDate) {
-  lastEngagementDate = latest.callDate; // string
-} else if (latest.updatedAt) {
-  lastEngagementDate = latest.updatedAt; // Firestore timestamp
-} else if (latest.createdAt) {
-  lastEngagementDate = latest.createdAt; // Firestore timestamp
-}
+                        const latest = engagements[0];
 
-    }
+                        // Determine last engagement date
+                        if (latest.callDate) {
+                            lastEngagementDate = latest.callDate; // string
+                        } else if (latest.updatedAt) {
+                            lastEngagementDate = latest.updatedAt; // Firestore timestamp
+                        } else if (latest.createdAt) {
+                            lastEngagementDate = latest.createdAt; // Firestore timestamp
+                        }
 
-    return {
-      id: docSnap.id,
-      ...data,
-      lastEngagementDate, // attach resolved last engagement
+                        // Determine next follow-up date (if exists)
+                        if (latest.nextFollowupDate) {
+                            nextFollowupDate = latest.nextFollowupDate; // string or timestamp
+                        }
+                    }
+
+                    return {
+                        id: docSnap.id,
+                        ...data,
+                        lastEngagementDate,  // last call/update
+                        nextFollowupDate     // latest follow-up
+                    };
+                })
+            );
+
+            setProspects(prospectList);
+            console.log("prospects with engagement and next follow-up:", prospectList);
+
+        } catch (err) {
+            console.error('Error fetching prospects:', err);
+            setError('Error fetching prospects. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
-  })
-);
 
+    fetchProspects();
+}, []);
 
-                setProspects(prospectList);
-                console.log("prospect with engagement:", prospectList);
-
-            } catch (err) {
-                console.error('Error fetching prospects:', err);
-                setError('Error fetching prospects. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProspects();
-    }, []);
 
     const handleEdit = (id) => {
         router.push(`/admin/event/edit/${id}`);
@@ -116,22 +124,23 @@ const formatDate = (dateValue) => {
             {loading && <div className='loader'><span className="loader2"></span></div>}
             <section className='c-userslist box'>
                 <h2>Prospects Listing</h2>
-                <button className="m-button-5" onClick={() => window.history.back()}>
-                    Back
-                </button>
+               
+                <ExportProspectsPage/>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <table className='table-class'>
-                    <thead>
-                        <tr>
-                            <th>Sr no</th>
-                            <th>Prospect Name</th>
-                            <th>Occupation</th>
-                            <th>Orbiter Name</th>
-                            <th>Last Engagement</th>
-                            <th>Type</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+                <thead>
+  <tr>
+    <th>Sr no</th>
+    <th>Prospect Name</th>
+    <th>Occupation</th>
+    <th>Orbiter Name</th>
+    <th>Last Engagement</th>
+    <th>Next Follow-up</th>
+    <th>Type</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+
                  <tbody>
     {prospects.length > 0 ? (
         [...prospects]
@@ -147,6 +156,9 @@ const formatDate = (dateValue) => {
                     <td>{item.occupation}</td>
                     <td>{item.orbiterName}</td>
                     <td>{formatDate(item.lastEngagementDate)}</td>
+                 <td>{formatDate(item.nextFollowupDate)}</td>
+
+
                     <td>{item.userType === 'orbiter' ? 'ETU' : 'NTU'}</td>
                     <td>
                         <div className='twobtn'>
