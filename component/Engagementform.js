@@ -19,9 +19,20 @@ const [formData, setFormData] = useState({
   discussionDetails: '',
   orbiterSuggestions: [''],
   teamSuggestions: [''],
-  referralPossibilities: ['']
+  referralPossibilities: [''],
+  nextFollowupDate: ''  // ✅ New field added
 });
 
+const formatDate = (date) => {
+  if (!date) return "—";
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const year = d.getFullYear();
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
 
   const handleArrayChange = (field, index, value) => {
     const updated = [...formData[field]];
@@ -270,6 +281,18 @@ useEffect(() => {
           required
         />
       </li>
+      <li className='form-row'>
+  <label className="form-label">Next Follow-up Date</label>
+  <div className='multipleitem'>
+    <input
+      type="datetime-local"
+      name="nextFollowupDate"
+      value={formData.nextFollowupDate}
+      onChange={handleChange}
+    />
+  </div>
+</li>
+
       </ul>
       <ul className="form-fields">
       {/* Orbiter Suggestions */}
@@ -342,6 +365,7 @@ useEffect(() => {
       <th>Orbiter Name</th>
       <th>Occasion</th>
       <th>Discussion</th>
+      <th>Next Follow-up</th>
       <th>Orbiter Suggestions</th>
       <th>Team Suggestions</th>
       <th>Referrals</th>
@@ -366,6 +390,9 @@ useEffect(() => {
             : ""}
         </td>
         <td>{entry.discussionDetails}</td>
+      <td>{formatDate(entry.nextFollowupDate)}</td>
+
+
         <td>
           <ul>
             {entry.orbiterSuggestions?.map((s, i) => (
@@ -387,11 +414,12 @@ useEffect(() => {
             ))}
           </ul>
         </td>
-        <td>
-          {entry.updatedAt
-            ? new Date(entry.updatedAt.seconds * 1000).toLocaleString()
-            : "—"}
-        </td>
+      <td>
+  {entry.updatedAt
+    ? formatDate(entry.updatedAt.seconds ? entry.updatedAt.toDate() : entry.updatedAt)
+    : "—"}
+</td>
+
       </tr>
     ))}
   </tbody>
